@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stores_app/student/views/login_view.dart';
 import 'package:stores_app/main/view/main_view.dart';
 import 'package:stores_app/student/views/profile_view.dart';
@@ -6,6 +7,7 @@ import 'package:stores_app/student/views/signup_view.dart';
 import 'package:stores_app/splash.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:io';
+
 
 Future<void> requestLocationPermission() async {
   LocationPermission permission = await Geolocator.checkPermission();
@@ -26,7 +28,7 @@ void main() async {
   //WidgetsFlutterBinding.ensureInitialized();
   //await requestLocationPermission(); //
 
-  runApp(const MyApp());
+runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

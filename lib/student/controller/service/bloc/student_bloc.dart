@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:stores_app/external/model/student_model.dart';
-import 'package:stores_app/student/controller/service/repo/student_repo.dart';
+import 'package:stores_app/student/repo/student_repo.dart';
 
 part 'student_event.dart';
 part 'student_state.dart';
@@ -37,8 +37,7 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   ) async {
     emit(StudentLoginLoadingState());
     final Map<String, dynamic> response = await StudentRepo.login(
-      event.studentData,
-    );
+    "","");
 
     if (response['status']) {
       emit(StudentLoginSuccessfullState(message: response['message']));

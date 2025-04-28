@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stores_app/student/controller/login_controller.dart';
-import 'package:stores_app/student/controller/service/bloc/student_bloc.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
+import 'package:stores_app/student/provider/login_provider.dart';
 import 'package:stores_app/student/views/signup_view.dart';
 import 'package:stores_app/external/widget/custom_loading.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends  ConsumerWidget{
   LoginPage({super.key});
-  final LoginController _controller = LoginController();
   final _formKey = GlobalKey<FormState>();
+  
+  final List<TextEditingController> textFieldControllers = [
+    TextEditingController(),
+    TextEditingController(),
+  ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var loginState = ref.watch(loginProviderProvider);
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: Stack(
@@ -87,7 +93,7 @@ class LoginPage extends StatelessWidget {
                   children: [
                     // Email TextField
                     TextFormField(
-                      controller: _controller.textFieldControllers[0],
+                      controller: textFieldControllers[0],
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         filled: true,
@@ -113,7 +119,7 @@ class LoginPage extends StatelessWidget {
                     const SizedBox(height: 10),
                     // Password TextField
                     TextFormField(
-                      controller: _controller.textFieldControllers[1],
+                      controller: textFieldControllers[1],
                       obscureText: true,
                       textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
@@ -144,9 +150,17 @@ class LoginPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _controller.login();
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()){
+                            try{
+                              await ref.read(loginProviderProvider.notifier).login(textFieldControllers[0].text, textFieldControllers[1].text);
+                            }catch(e) {
+                               showTopSnackBar(
+                                Overlay.of(context),
+                                CustomSnackBar.error(message: e.toString()),
+                              );
+                            }
+                            
                           }
                         },
                         child: const Text(
@@ -184,11 +198,19 @@ class LoginPage extends StatelessWidget {
               ),
             ),
           ),
-          BlocConsumer<StudentBloc, StudentState>(
-            bloc: _controller.studentBloc,
-            builder: (context, state) {
-              switch (state.runtimeType) {
-                case StudentLoginLoadingState:
+          
+          loginState.when(data:(message) {
+                showTopSnackBar(
+                  Overlay.of(context),
+                  CustomSnackBar.error(message: message),
+                );
+            return Container();
+            }, error: (e,errorTree){
+              
+              return Container();
+              }, loading: (){
+                
+
                   return Positioned(
                     left: 0,
                     right: 0,
@@ -196,14 +218,8 @@ class LoginPage extends StatelessWidget {
                     bottom: 0,
                     child: CustomLoading(),
                   );
-                default:
-                  return Container();
-              }
-            },
-            listener: (context, state) {
-              _controller.showLoginState(state, context);
-            },
-          ),
+              })
+          
         ],
       ),
     );
