@@ -37,28 +37,6 @@ class StudentModel {
     return studentModel;
   }
 
-  static String signupRequest(
-    String name,
-    String email,
-    String password,
-    int student_id,
-    int? level,
-    int? gender,
-  ) {
-    final Map<String, dynamic> data = {
-      "email": email,
-      "name": name,
-      "student_id": student_id,
-      "password": password,
-    };
-    if (level != null) data['level'] = level;
-
-    if (gender != null) data['gender'] = gender;
-    final String request = json.encode(data);
-
-    return request;
-  }
-
   static String updateRequest(
     String name,
     String email,
@@ -84,10 +62,4 @@ class StudentModel {
     return request;
   }
 
-  static String loginRequest(String email, String password) {
-    final Map<String, dynamic> data = {"email": email, "password": password};
-    final String request = json.encode(data);
-
-    return request;
-  }
 }

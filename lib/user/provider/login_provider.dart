@@ -1,19 +1,15 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:stores_app/student/repo/student_repo.dart';
+import 'package:stores_app/user/repo/student_repo.dart';
 part "login_provider.g.dart";
 
 
 @riverpod
-class LoginProvider extends _$LoginProvider{
-  
-  @override
-  FutureOr<String> build() {
-    return "";
-  }
+class Login extends _$Login{
 
+  @override
+  FutureOr<String> build() => "";
   
-  
-  FutureOr<void>  login(String email, String password) async{
+  FutureOr<String>  login(String email, String password) async{
       try {
       state = const AsyncLoading(); 
       final Map<String, dynamic> response = await StudentRepo.login(email, password);
@@ -21,8 +17,10 @@ class LoginProvider extends _$LoginProvider{
         throw response['error'];
       }
       state = AsyncData(response["message"]); 
+      return response['message'];
     } catch (e, st) {
       state = AsyncError(e, st); 
+      return e.toString();
     }
     
 

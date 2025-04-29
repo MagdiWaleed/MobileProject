@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
-import 'package:stores_app/student/provider/login_provider.dart';
-import 'package:stores_app/student/views/signup_view.dart';
+import 'package:stores_app/user/provider/login_provider.dart';
+import 'package:stores_app/user/views/signup_view.dart';
 import 'package:stores_app/external/widget/custom_loading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -15,10 +15,29 @@ class LoginPage extends  ConsumerWidget{
     TextEditingController(),
     TextEditingController(),
   ];
-
+  bool loading = false;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var loginState = ref.watch(loginProviderProvider);
+    ref.listen<AsyncValue<String>>(loginProvider, (prev, next) {
+    next.whenOrNull(
+      data: (message) {
+        showTopSnackBar(
+          Overlay.of(context),
+          CustomSnackBar.success(message: message),
+        );
+
+      },
+      error: (e, _) {
+        showTopSnackBar(
+          Overlay.of(context),
+          CustomSnackBar.error(message: e.toString()),
+        );
+      },
+    );
+  });
+
+
+    final loginState = ref.watch(loginProvider);
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: Stack(
@@ -37,7 +56,6 @@ class LoginPage extends  ConsumerWidget{
             ),
           ),
 
-          // Welcome Text
           Positioned(
             top: 60,
             left: 30,
@@ -152,14 +170,8 @@ class LoginPage extends  ConsumerWidget{
                         ),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()){
-                            try{
-                              await ref.read(loginProviderProvider.notifier).login(textFieldControllers[0].text, textFieldControllers[1].text);
-                            }catch(e) {
-                               showTopSnackBar(
-                                Overlay.of(context),
-                                CustomSnackBar.error(message: e.toString()),
-                              );
-                            }
+                           
+                              await ref.read(loginProvider.notifier).login(textFieldControllers[0].text, textFieldControllers[1].text);
                             
                           }
                         },
@@ -198,27 +210,15 @@ class LoginPage extends  ConsumerWidget{
               ),
             ),
           ),
-          
-          loginState.when(data:(message) {
-                showTopSnackBar(
-                  Overlay.of(context),
-                  CustomSnackBar.error(message: message),
-                );
-            return Container();
-            }, error: (e,errorTree){
-              
-              return Container();
-              }, loading: (){
-                
-
-                  return Positioned(
+          if(loginState.isLoading)
+           Positioned(
                     left: 0,
                     right: 0,
                     top: 0,
                     bottom: 0,
                     child: CustomLoading(),
-                  );
-              })
+                  )
+              
           
         ],
       ),

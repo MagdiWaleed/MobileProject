@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:stores_app/main/services/main_profile_service/repo/main_profile_repo.dart';
-import 'package:stores_app/external/model/student_model.dart';
+import 'package:stores_app/external/model/user_model.dart';
 import 'package:meta/meta.dart';
 
 part 'main_profile_event.dart';

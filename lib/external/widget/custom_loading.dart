@@ -4,6 +4,7 @@ import 'package:stores_app/external/theme/app_colors.dart';
 
 class CustomLoading extends StatelessWidget {
   const CustomLoading({super.key});
+  
 
   @override
   Widget build(BuildContext context) {

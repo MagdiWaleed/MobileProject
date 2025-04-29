@@ -1,24 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stores_app/student/controller/service/bloc/student_bloc.dart';
-import 'package:stores_app/student/controller/signup_controller.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:stores_app/main/view/main_view.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
 import 'package:stores_app/external/widget/custom_loading.dart';
+import 'package:stores_app/user/provider/signup_provider.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-class SignupPage extends StatefulWidget {
+class SignupPage extends ConsumerStatefulWidget {
   const SignupPage({super.key});
 
   @override
   SignupPageState createState() => SignupPageState();
 }
 
-class SignupPageState extends State<SignupPage> {
-  final SignupController _controller = SignupController();
+class SignupPageState extends ConsumerState<SignupPage> {
+  
+  void nextPage() {
+      if (currentPage < 2) {
+        currentPage++;
+        pageController.animateToPage(
+          currentPage,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+  final List<TextEditingController> textFieldControllers = [
+    TextEditingController(), //email
+    TextEditingController(), //id
+    TextEditingController(), //name
+    TextEditingController(), //password
+    TextEditingController(), //confirm password
+  ];
+
   final _formKeyPage1 = GlobalKey<FormState>();
   final _formKeyPage2 = GlobalKey<FormState>();
+  final PageController pageController =
+              PageController(); 
+  int currentPage = 0;
+
+  String? selectedGender;
+  int? selectedLevel;
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(signupProvider, (prev,next){
+      next.whenOrNull(
+        data: (data) {
+        showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.success(message: data!.toString()),
+          );
+
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => MainView()),
+          );
+      },
+      error: (e,_)=>  showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.error(message: e.toString()),
+          )
+      );
+    });
+    final signupState = ref.watch(signupProvider);
     final List<Widget> subPages = [
       // Page 1: Email and Student ID
       Form(
@@ -28,7 +73,7 @@ class SignupPageState extends State<SignupPage> {
             const Text("Please fill out the following fields"),
             const SizedBox(height: 15),
             TextFormField(
-              controller: _controller.textFieldControllers[0],
+              controller: textFieldControllers[0],
               textInputAction: TextInputAction.done,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
@@ -54,7 +99,7 @@ class SignupPageState extends State<SignupPage> {
             ),
             const SizedBox(height: 10),
             TextFormField(
-              controller: _controller.textFieldControllers[1],
+              controller: textFieldControllers[1],
               textInputAction: TextInputAction.done,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
@@ -85,12 +130,12 @@ class SignupPageState extends State<SignupPage> {
                   onPressed: () {
                     if (_formKeyPage1.currentState!.validate()) {
                       String email =
-                          _controller.textFieldControllers[0].text.trim();
+                          textFieldControllers[0].text.trim();
                       String studentId =
-                          _controller.textFieldControllers[1].text.trim();
+                          textFieldControllers[1].text.trim();
                       String studentIdFromEmail = email.split('@')[0];
                       if (studentIdFromEmail == studentId) {
-                        _controller.nextPage();
+                        nextPage();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -120,7 +165,7 @@ class SignupPageState extends State<SignupPage> {
             const Text("Please fill out the following fields"),
             const SizedBox(height: 15),
             TextFormField(
-              controller: _controller.textFieldControllers[2],
+              controller: textFieldControllers[2],
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(
                 filled: true,
@@ -140,7 +185,7 @@ class SignupPageState extends State<SignupPage> {
             ),
             const SizedBox(height: 10),
             TextFormField(
-              controller: _controller.textFieldControllers[3],
+              controller: textFieldControllers[3],
               obscureText: true,
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(
@@ -167,7 +212,7 @@ class SignupPageState extends State<SignupPage> {
             ),
             const SizedBox(height: 10),
             TextFormField(
-              controller: _controller.textFieldControllers[4],
+              controller: textFieldControllers[4],
               obscureText: true,
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(
@@ -183,7 +228,7 @@ class SignupPageState extends State<SignupPage> {
                 if (value == null || value.trim().isEmpty) {
                   return 'Please confirm your password';
                 }
-                if (value != _controller.textFieldControllers[3].text) {
+                if (value != textFieldControllers[3].text) {
                   return 'Passwords do not match';
                 }
                 return null;
@@ -197,7 +242,7 @@ class SignupPageState extends State<SignupPage> {
                 TextButton(
                   onPressed: () {
                     if (_formKeyPage2.currentState!.validate()) {
-                      _controller.nextPage();
+                      nextPage();
                     }
                   },
                   child: const Text(
@@ -224,10 +269,10 @@ class SignupPageState extends State<SignupPage> {
             children: [
               Radio<String>(
                 value: "Male",
-                groupValue: _controller.selectedGender,
+                groupValue: selectedGender,
                 onChanged: (value) {
                   setState(() {
-                    _controller.selectedGender = value!;
+                    selectedGender = value!;
                   });
                 },
               ),
@@ -235,10 +280,10 @@ class SignupPageState extends State<SignupPage> {
               const SizedBox(width: 20),
               Radio<String>(
                 value: "Female",
-                groupValue: _controller.selectedGender,
+                groupValue: selectedGender,
                 onChanged: (value) {
                   setState(() {
-                    _controller.selectedGender = value!;
+                    selectedGender = value!;
                   });
                 },
               ),
@@ -260,10 +305,10 @@ class SignupPageState extends State<SignupPage> {
                 children: [
                   Radio<int>(
                     value: index + 1,
-                    groupValue: _controller.selectedLevel,
+                    groupValue: selectedLevel,
                     onChanged: (value) {
                       setState(() {
-                        _controller.selectedLevel = value!;
+                        selectedLevel = value!;
                       });
                     },
                   ),
@@ -277,8 +322,8 @@ class SignupPageState extends State<SignupPage> {
               TextButton(
                 onPressed: () {
                   setState(() {
-                    _controller.selectedGender = null;
-                    _controller.selectedLevel = null;
+                    selectedGender = null;
+                    selectedLevel = null;
                   });
                 },
                 child: const Text(
@@ -299,8 +344,21 @@ class SignupPageState extends State<SignupPage> {
                 ),
               ),
               onPressed: () {
-                _controller.signup();
-              },
+                final Map<String, dynamic> studentData = {
+                      "name": textFieldControllers[2].value.text,
+                      "email": textFieldControllers[0].value.text,
+                      "student_id": int.parse(textFieldControllers[1].value.text),
+                      "password": textFieldControllers[3].value.text,
+                      "level": selectedLevel,
+                      "gender":
+                          selectedGender == null
+                              ? null
+                              : selectedGender == "Male"
+                              ? 0
+                              : 1,
+                    };            
+                    ref.read(signupProvider.notifier).signup(studentData);
+                      },
               child: Text(
                 "FINISH",
                 style: const TextStyle(fontSize: 16, color: Colors.white),
@@ -357,10 +415,10 @@ class SignupPageState extends State<SignupPage> {
           ),
           // Signup Card
           PageView(
-            controller: _controller.pageController,
+            controller: pageController,
             onPageChanged: (value) {
               setState(() {
-                _controller.currentPage = value;
+                currentPage = value;
               });
             },
             children: [
@@ -385,29 +443,15 @@ class SignupPageState extends State<SignupPage> {
                 ),
             ],
           ),
-          BlocConsumer<StudentBloc, StudentState>(
-            bloc: _controller.studentBloc,
-            builder: (context, state) {
-              switch (state.runtimeType) {
-                case StudentSignupLoadingState:
-                  {
-                    return Positioned(
+          if(signupState.isLoading)
+              Positioned(
                       left: 0,
                       right: 0,
                       top: 0,
                       bottom: 0,
                       child: CustomLoading(),
-                    );
-                  }
-                default:
-                  {
-                    return Container();
-                  }
-              }
-            },
-            listener: (context, state) {
-              _controller.showSignupState(state, context);
-            },
+                  
+           
           ),
         ],
       ),

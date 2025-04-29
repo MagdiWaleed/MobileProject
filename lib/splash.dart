@@ -7,7 +7,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:stores_app/external/app_data.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
 import 'package:stores_app/main/view/main_view.dart';
-import 'package:stores_app/student/views/login_view.dart';
+import 'package:stores_app/user/views/login_view.dart';
 import 'package:stores_app/external/widget/custom_loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
