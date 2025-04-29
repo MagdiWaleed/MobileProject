@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,24 +8,25 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:stores_app/external/app_data.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
 import 'package:stores_app/main/view/main_view.dart';
+import 'package:stores_app/splash/provider/splash_provider.dart';
 import 'package:stores_app/user/views/login_view.dart';
-import 'package:stores_app/external/widget/custom_loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-class Splash extends StatefulWidget {
+class Splash extends ConsumerStatefulWidget {
   const Splash({super.key});
 
   @override
-  State<Splash> createState() => _SplashState();
+  ConsumerState<Splash> createState() => _SplashState();
 }
 
-class _SplashState extends State<Splash> {
+class _SplashState extends ConsumerState<Splash> {
+
   void am_i_logged_in() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
-    // await prefs.remove('token');
+    await ref.read(getStoresDataSplashProvider.notifier).FetchStoresData();
     if (token == null) {
       Navigator.of(
         context,
@@ -68,6 +70,14 @@ class _SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(getStoresDataSplashProvider, (_,next)=>next.whenOrNull(
+      error: (_, _)=>showTopSnackBar(
+                                Overlay.of(context),
+                                CustomSnackBar.error(
+                                  message: "Couldn't Load The Data From The Server",
+                                ),
+                              ),data: (_)=> print("lessgo")
+    ));
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

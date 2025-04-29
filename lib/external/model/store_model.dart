@@ -1,5 +1,6 @@
 import 'package:faker/faker.dart';
 import 'package:stores_app/external/app_data.dart';
+import 'package:stores_app/external/model/product_model.dart';
 
 class StoreModel {
   final int id;
@@ -9,7 +10,8 @@ class StoreModel {
   final String image;
   final double store_location_longitude;
   final double store_location_latitude;
-  bool favo;
+  final List<ProductModel> products= [];
+
 
   StoreModel({
     required this.id,
@@ -19,8 +21,6 @@ class StoreModel {
     required this.store_location_latitude,
     required this.store_location_longitude,
     required this.store_description,
-
-    required this.favo,
   });
 
   Map<String, dynamic> toMap() {
@@ -32,7 +32,6 @@ class StoreModel {
       'store_location_longitude': store_location_longitude,
       'store_location_latitude': store_location_latitude,
       "store_description": store_description,
-      'favo': favo,
     };
   }
 
@@ -45,7 +44,6 @@ class StoreModel {
       review: data['store_review'],
       image: AppData.SERVER_URL! + "/" + data['store_image'],
       store_description: data["store_description"],
-      favo: data['favo'] ?? true,
     );
   }
   static String getRandomImage() {

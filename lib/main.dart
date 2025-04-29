@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:stores_app/test/test_view.dart';
 import 'package:stores_app/user/views/login_view.dart';
 import 'package:stores_app/main/view/main_view.dart';
 import 'package:stores_app/user/views/profile_view.dart';
 import 'package:stores_app/user/views/signup_view.dart';
-import 'package:stores_app/splash.dart';
+import 'package:stores_app/splash/splash.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:io';
 
