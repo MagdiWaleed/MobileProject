@@ -1,49 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stores_app/main/services/main_profile_service/main_profile_bloc.dart';
-import 'package:stores_app/main/services/main_stores_service/stores_bloc.dart';
 import 'package:stores_app/main/view/main_profile_view.dart';
 import 'package:stores_app/main/view/stores_view.dart';
-import 'package:stores_app/user/controller/service/bloc/student_bloc.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
-import 'package:stores_app/user/views/profile_view.dart';
-import 'package:stores_app/external/widget/custom_loading.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
-import 'package:stores_app/external/app_data.dart';
 
-class MainView extends StatefulWidget {
+
+class MainView extends ConsumerStatefulWidget {
   MainView({super.key});
   @override
-  State<MainView> createState() => _MainViewState();
+  ConsumerState<MainView> createState() => _MainViewState();
 }
 
-class _MainViewState extends State<MainView> {
+class _MainViewState extends ConsumerState<MainView> {
   int currentPageIndex = 1;
   int build_counter = 0;
-  final StoresBloc storesBloc= StoresBloc();
   final MainProfileBloc mainProfileBloc = MainProfileBloc();
 
   List<String> appBarText = ["Search", "Stores", "Profile"];
   bool visitedProfile = false;
   @override
   void initState() {
-    storesBloc.add(StoresGetDataEvent());
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
+    
     build_counter++;
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value) {
+
           setState(() {
-            if (value ==currentPageIndex &&  value ==1){
-              
-              storesBloc.add(StoresGetDataEvent());
-            }else if(value == currentPageIndex && value ==2){
-              mainProfileBloc.add(MainProfileGetDataEvent());
+            
+           if(value == currentPageIndex && value ==2){
+              // mainProfileBloc.add(MainProfileGetDataEvent());
             }
             
             if(!visitedProfile){
@@ -99,7 +91,7 @@ class _MainViewState extends State<MainView> {
       body:
           [
             Placeholder(),
-            StoresView(storesBloc: storesBloc),
+            StoresView(),
             MainProfileView(mainProfileBloc: mainProfileBloc,),
           ][currentPageIndex],
     );

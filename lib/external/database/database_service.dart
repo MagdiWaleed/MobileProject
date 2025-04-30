@@ -199,7 +199,6 @@ Future<List<ProductModel>> getStoreProducts(int storeId) async {
     try {
       final db = await database;
       final data = await db.query(_storesTableName);
-      print(data);
       List<StoreModel> stores = data.map((e) => StoreModel.fromMap(e)).toList();
       return stores;
     } catch (e) {

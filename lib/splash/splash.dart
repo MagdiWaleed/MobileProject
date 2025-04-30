@@ -40,7 +40,8 @@ class _SplashState extends ConsumerState<Splash> {
 
   @override
   void initState() {
-    // AppData.SERVER_URL = "https://api.almahil.com";
+    AppData.SERVER_URL = "http://192.168.1.10:5000";
+    am_i_logged_in();
     super.initState();
   }
 
