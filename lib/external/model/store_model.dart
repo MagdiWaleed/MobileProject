@@ -10,8 +10,7 @@ class StoreModel {
   final String image;
   final double store_location_longitude;
   final double store_location_latitude;
-  final List<ProductModel> products= [];
-
+  final List<ProductModel> products;
 
   StoreModel({
     required this.id,
@@ -21,6 +20,7 @@ class StoreModel {
     required this.store_location_latitude,
     required this.store_location_longitude,
     required this.store_description,
+    this.products = const [],
   });
 
   Map<String, dynamic> toMap() {
