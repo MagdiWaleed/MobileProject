@@ -21,7 +21,6 @@ class StoreModel {
     required this.store_location_latitude,
     required this.store_location_longitude,
     required this.store_description,
-    this.products = const [],
   });
 
   Map<String, dynamic> toMap() {
@@ -50,4 +49,14 @@ class StoreModel {
   static String getRandomImage() {
     return faker.image.image(random: true);
   }
+
+    @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is StoreModel && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
+
+
 }

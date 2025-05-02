@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:stores_app/external/model/store_model.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
 
 class SingleShopView extends StatelessWidget {
-  final Map<String, dynamic> shop;
+  final StoreModel shop;
   const SingleShopView({super.key, required this.shop});
 
   @override
@@ -10,34 +11,25 @@ class SingleShopView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 90,
-        shape: const RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(12),
             bottomRight: Radius.circular(12),
           ),
         ),
         backgroundColor: AppColors.mainColor,
-        centerTitle: true,
         title: Text(
-          shop['name']!,
-          style: TextStyle(fontSize: 18, color: Colors.white),
-        ),
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          shop.name,
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(50),
-              child: Image.asset(
-                shop['image']!,
-                height: 50,
-                width: 50,
-                fit: BoxFit.cover,
-              ),
-            ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Image.asset('assets/images/logo.png', height: 50),
           ),
         ],
       ),
@@ -53,8 +45,8 @@ class SingleShopView extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        shop['image']!,
+                      child: Image.network(
+                        shop.image,
                         width: double.infinity,
                         height: 150,
                         fit: BoxFit.cover,
@@ -92,8 +84,8 @@ class SingleShopView extends StatelessWidget {
                           contentPadding: const EdgeInsets.all(8),
                           leading: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              shop['image']!,
+                            child: Image.network(
+                              shop.image,
                               height: 80,
                               width: 50,
                               fit: BoxFit.cover,
@@ -103,7 +95,7 @@ class SingleShopView extends StatelessWidget {
                             ),
                           ),
                           title: Text(
-                            shop['name']!,
+                            shop.name,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -114,7 +106,7 @@ class SingleShopView extends StatelessWidget {
                             children: [
                               Icon(Icons.star, color: Colors.amber, size: 16),
                               Text(
-                                shop['rating']!,
+                                shop.name,
                                 style: TextStyle(color: Colors.black54),
                               ),
                             ],
@@ -127,7 +119,7 @@ class SingleShopView extends StatelessWidget {
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: 3,
+                  itemCount: shop.products.length,
                   itemBuilder: (context, index) {
                     return Card(
                       margin: const EdgeInsets.symmetric(
@@ -142,16 +134,16 @@ class SingleShopView extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    '"Item Name"',
+                                   Text(
+                                    shop.products[index].name,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  const Text(
-                                    'Mixed Pizza with bla bla bla and extra bla bal with a lot of bal...',
+                                  Text(
+                                    shop.products[index].descrption,
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   const SizedBox(height: 8),
@@ -161,8 +153,8 @@ class SingleShopView extends StatelessWidget {
                             const SizedBox(width: 16),
                             ClipRRect(
                               borderRadius: BorderRadius.circular(8),
-                              child: Image.asset(
-                                shop['image']!,
+                              child: Image.network(
+                                shop.image,
                                 width: 80,
                                 height: 80,
                                 fit: BoxFit.cover,

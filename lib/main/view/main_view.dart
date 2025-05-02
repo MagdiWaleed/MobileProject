@@ -30,6 +30,16 @@ class _MainViewState extends ConsumerState<MainView> {
     
     build_counter++;
     return Scaffold(
+      floatingActionButton:currentPageIndex==0?FloatingActionButton.extended(
+        backgroundColor: AppColors.mainColor,
+        onPressed: (){}, 
+        label: Row(
+          children: [
+            Text('Map View',style: TextStyle(color: Colors.white,fontSize: 12),),
+          Icon(Icons.map, color: Colors.white, size: 18)
+          ],
+        )
+        ): Container(),
       backgroundColor: AppColors.backgroundColor,
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value) {

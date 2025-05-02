@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
+import 'package:stores_app/external/model/product_model.dart';
+import 'package:stores_app/external/model/store_model.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
 
 class CustomItemCard extends StatelessWidget {
-  final Map<String, String> item;
+  final ProductModel item;
+  final String storeName;
 
-  const CustomItemCard({Key? key, required this.item}) : super(key: key);
+  const CustomItemCard({Key? key, required this.item, required this.storeName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +33,25 @@ class CustomItemCard extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      item['image'] ?? '',
+                    child: Image.network(
+                      item.image,
                       width: 60,
                       height: 60,
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                      return Image.asset('assets/images/logo.png');
+                    },
+                    loadingBuilder: (context, child, loadingProgress) {
+                      return LoadingIndicator(
+                        indicatorType:Indicator.ballRotate,
+                          colors: const [
+                            AppColors.mainColor,
+                            AppColors.mainColor,
+                            AppColors.mainColor,
+                      ], 
+                      );
+                    },
+        
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -44,7 +62,7 @@ class CustomItemCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          item['item'] ?? '',
+                          item.name,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -53,7 +71,7 @@ class CustomItemCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          item['description'] ?? '',
+                          item.descrption,
                           style: const TextStyle(
                             fontSize: 12,
                             color: Colors.black54,
@@ -90,7 +108,7 @@ class CustomItemCard extends StatelessWidget {
               ),
               alignment: Alignment.center,
               child: Text(
-                item['shop'] ?? '',
+                storeName,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.white,

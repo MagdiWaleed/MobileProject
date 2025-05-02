@@ -50,6 +50,7 @@ class CustomShopCard extends StatelessWidget {
                                   shop.image,
                                   width: 16,
                                   height: 16,
+                                  
                                 ),
                                       SizedBox(width: 15),
                                       Text(

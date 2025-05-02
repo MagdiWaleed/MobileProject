@@ -1,3 +1,5 @@
+import 'package:stores_app/external/app_data.dart';
+
 class ProductModel {
 final String name;
 final String descrption;
@@ -10,7 +12,7 @@ final double price;
     return ProductModel(
     id: data['product_id'],
     name: data["product_name"],
-    image:data['product_image'],
+    image:AppData.SERVER_URL! +"/"+ data['product_image'],
     descrption: data['product_description'],
     price: data['product_price']);
   }

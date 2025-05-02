@@ -257,21 +257,22 @@ Future<List<StoreModel>> getStoresProductsMatching(String productName) async {
     WHERE LOWER(p.$_productsNameColumnName) LIKE ?
   ''', ['%${productName.toLowerCase()}%']);
 
-  // Group results by store_id
-  final Map<int, StoreModel> storeMap = {};
+  final List<StoreModel> stores= [];
+  // print(result[0]);
   for (var row in result) {
-    int storeId = row[_storesIdColumnName];
-
-    if (!storeMap.containsKey(storeId)) {
-      storeMap[storeId] = StoreModel.fromMap(row);
+    final StoreModel store = StoreModel.fromMap(row);
+    if( stores.contains(store)){
+      int index = stores.indexWhere((single_store) => single_store.id == store.id);
+      stores[index].products.add(ProductModel.fromMap(row));
+      continue;
+    }else{
+      store.products.add(ProductModel.fromMap(row));
+      stores.add(store);
     }
-
-    // Create ProductModel and add to the store's product list
-    final product = ProductModel.fromMap(row);
-    storeMap[storeId]?.products.add(product);
+  
   }
 
-  return storeMap.values.toList();
+  return stores;
 }
 
 

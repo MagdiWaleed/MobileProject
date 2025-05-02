@@ -16,18 +16,89 @@ FutureOr<List> build() async{
   final List<StoreModel>? stores = await _database.getStores();
   for (int i =0; i< stores!.length; i++){
     List<ProductModel> products = await _database.getStoreProducts(stores[i].id);
-     print(products);
-    stores[i].products = products;
+     stores[i].products = products;
     }
-  print(stores);
   return stores;
 }
 
+FutureOr<List> getInitialStoresList() async{
+  state = AsyncLoading();
+  late List<StoreModel>? stores;
+  try{  stores= await _database.getStores();
+  for (int i =0; i< stores!.length; i++){
+    List<ProductModel> products = await _database.getStoreProducts(stores[i].id);
+     stores[i].products = products;
+    }
+  }catch(e,et){
+    state = AsyncError(e,et);
+  }
+  state = AsyncData(stores!);
+  return stores;
+}
 
-Future<List> getStoresSearchStores (String productName) async{
+Future<List> getStoresSearch (String productName) async{
   state =AsyncLoading();
-  final List? stores = await _database.getStores();
+  late List? stores;
+  try{ stores= await _database.getStoresProductsMatching(productName);
+  }catch(e,et){
+    state = AsyncError(e, et);
+  }
   state =AsyncData(stores!);
   return stores;
+}
+
+Future<Map<String,dynamic>> getInitialItemsList()async{
+  state = AsyncLoading();
+  final List<Map<String,dynamic>> uniqueProducts = [];
+  final List<Map<String,dynamic>> data= [];
+
+  try{
+  final List<StoreModel>? stores = await _database.getStores();
+  for (int i =0; i< stores!.length; i++){
+    List<ProductModel> products = await _database.getStoreProducts(stores[i].id);
+     stores[i].products = products;
+    }
+  for (StoreModel store in stores){
+    for(ProductModel product in store.products){
+      data.add({"product": product,"store":store});
+      if (uniqueProducts.any((item) => 
+          item['product'] == product.name && item['image'] == product.image)) {
+        continue;
+      }
+      uniqueProducts.add({"product":product.name,"image":product.image});
+    }
+ }
+
+  state = AsyncData([{"data":data,"unique product": uniqueProducts}]);
+  }catch(error, stackTrace){
+    state = AsyncError(error, stackTrace);
+  }
+  return {"data":data,"unique product": uniqueProducts};
+}
+
+
+Future<Map<String,dynamic>> getItemsSearch (String productName) async{
+ state = AsyncLoading();
+  final List<Map<String,dynamic>> uniqueProducts = [];
+  final List<Map<String,dynamic>> data= [];
+
+  try{
+  final List? stores = await _database.getStoresProductsMatching(productName);
+  for (StoreModel store in stores!){
+    for(ProductModel product in store.products){
+      data.add({"product": product,"store":store});
+      if (uniqueProducts.any((item) => 
+          item['product'] == product.name && item['image'] == product.image)) {
+        continue;
+      }
+      uniqueProducts.add({"product":product.name,"image":product.image});
+    }
+ }
+
+  state = AsyncData([{"data":data,"unique product": uniqueProducts}]);
+  }catch(error, stackTrace){
+    state = AsyncError(error, stackTrace);
+  }
+  return {"data":data,"unique product": uniqueProducts};
 }
 }
