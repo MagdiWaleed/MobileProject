@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:stores_app/external/model/store_model.dart';
-import 'package:stores_app/external/widget/custom_loading.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'dart:math';

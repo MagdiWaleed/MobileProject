@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
+import 'package:stores_app/main/view/main_view.dart';
 import 'package:stores_app/user/provider/login_provider.dart';
 import 'package:stores_app/user/views/signup_view.dart';
 import 'package:stores_app/external/widget/custom_loading.dart';
@@ -25,6 +26,7 @@ class LoginPage extends  ConsumerWidget{
           Overlay.of(context),
           CustomSnackBar.success(message: message),
         );
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>MainView()));
 
       },
       error: (e, _) {
