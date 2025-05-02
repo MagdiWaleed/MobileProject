@@ -46,12 +46,13 @@ class CustomShopCard extends StatelessWidget {
                                     children: [
                                       Row(children: [
                               SizedBox(width: 8),
-                                Image.network(
-                                  shop.image,
+                                 Image.asset(
+                                  'assets/images/logo.png',
                                   width: 16,
                                   height: 16,
-                                  
-                                ),
+                                  fit: BoxFit.cover,
+                                      
+                                      ),
                                       SizedBox(width: 15),
                                       Text(
                                         item.name,

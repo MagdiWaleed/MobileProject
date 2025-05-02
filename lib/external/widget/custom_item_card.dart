@@ -33,24 +33,12 @@ class CustomItemCard extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      item.image,
-                      width: 60,
-                      height: 60,
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      width: 90,
+                      height: 90,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                      return Image.asset('assets/images/logo.png');
-                    },
-                    loadingBuilder: (context, child, loadingProgress) {
-                      return LoadingIndicator(
-                        indicatorType:Indicator.ballRotate,
-                          colors: const [
-                            AppColors.mainColor,
-                            AppColors.mainColor,
-                            AppColors.mainColor,
-                      ], 
-                      );
-                    },
+                    
         
                     ),
                   ),

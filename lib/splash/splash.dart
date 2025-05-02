@@ -24,6 +24,9 @@ class Splash extends ConsumerStatefulWidget {
 class _SplashState extends ConsumerState<Splash> {
 
   void am_i_logged_in() async {
+    setState(() {
+      start_loading = true;
+    });
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
     await ref.read(getStoresDataSplashProvider.notifier).FetchStoresData();
@@ -38,12 +41,12 @@ class _SplashState extends ConsumerState<Splash> {
     }
   }
 
-  // @override
-  // void initState() {
-  //   AppData.SERVER_URL = "http://192.168.1.10:5000";
-  //   am_i_logged_in();
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    AppData.SERVER_URL = "http://192.168.1.10:5000";
+    am_i_logged_in();
+    super.initState();
+  }
 
   final TextEditingController _textEditingController = TextEditingController();
 

@@ -5,8 +5,7 @@ import 'package:stores_app/external/widget/custom_item_card.dart';
 import 'package:stores_app/external/widget/custom_loading.dart';
 import 'package:stores_app/external/widget/custom_shop_card.dart';
 import 'package:stores_app/main/provider/search_provider.dart';
-import 'package:stores_app/main/view/item_shop_view.dart';
-import 'package:stores_app/main/view/single_shop_view.dart';
+import 'package:stores_app/store_details/single_shop_view.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
 
 class SearchView extends ConsumerStatefulWidget {
@@ -98,7 +97,6 @@ class _SearchViewState extends ConsumerState<SearchView> {
   //   },
   // ];
 
-  int numberOfResults = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +162,16 @@ class _SearchViewState extends ConsumerState<SearchView> {
                                         : 'Search for items, cafés, restaurants...',
                                 border: InputBorder.none,
                                 hintStyle: TextStyle(color: Colors.grey[600]),
-                              ),onSubmitted: (value){
+                              ),
+                              onSubmitted: (value){
+                                 if(_dropdownValue=="Shop"){
+                                  ref.read(searchProvider.notifier).getStoresSearch(value);
+                                }
+                                else if(_dropdownValue =="Item"){
+                                ref.read(searchProvider.notifier).getItemsSearch(value);
+                                }
+                              },
+                              onChanged: (value){
                                  if(_dropdownValue=="Shop"){
                                   ref.read(searchProvider.notifier).getStoresSearch(value);
                                 }
@@ -205,35 +212,12 @@ class _SearchViewState extends ConsumerState<SearchView> {
           ),
         ),
        ),
-       SliverToBoxAdapter(
-        child:   Container(height: 30,width: double.infinity,
-        decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black)]
-        ),
-        child:Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(width: 20),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: AppColors.mainColor
-              ),
-              child: Text("Stores #${numberOfResults}",style: TextStyle(color: Colors.white),),
-            )
-        ],)
-        ),
-       ),
-       
-       
+
         // Content
         _dropdownValue == 'Shop' ? 
         searchState.when(data: (data){
-          numberOfResults = data.length;
-          
-          return  
+
+          return  data.length!=0?
           SliverGrid.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -254,7 +238,14 @@ class _SearchViewState extends ConsumerState<SearchView> {
                 child: CustomShopCard(shop: data[index]),
               );
             },
-          );
+          ):SliverToBoxAdapter(child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 200),
+              Text("There are no Product with: "+_searchController.text),
+              
+            ],
+          ));
           
           }, error: (e,eTree)=>Center(
               child: SliverToBoxAdapter(child: Text("an Error Occure")),
@@ -274,6 +265,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
         searchState.when(data: (combinedData) {
         final data = combinedData[0]['unique product'];
         // print(data);
+
         return    
         SliverToBoxAdapter(
           child: SizedBox(
@@ -310,21 +302,14 @@ class _SearchViewState extends ConsumerState<SearchView> {
                               ),
                             ],
                           ),
-                          child:  Image.network(data[index]['image'],
-                          errorBuilder: (context, error, stackTrace) {
-                              return Image.asset('assets/images/logo.png');
-                            },
-                          loadingBuilder: (context, child, loadingProgress) {
-                            return  LoadingIndicator(
-                          indicatorType:Indicator.ballRotate,
-                            colors: const [
-                              AppColors.mainColor,
-                              AppColors.mainColor,
-                              AppColors.mainColor,
-                        ], 
-                        );
-                          },
-                          ),
+                          child:   Image.asset(
+                      'assets/images/logo.png',
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
+                    
+        
+                    ),
                         ),
                         const SizedBox(height: 6),
                         Text(
@@ -348,10 +333,12 @@ class _SearchViewState extends ConsumerState<SearchView> {
 
           if(_dropdownValue == 'Item' )
           searchState.when(
-
+            
             data: (combinedData){
+              
               final data = combinedData[0]["data"];
-              return
+
+              return data.length!=0?
           SliverList.builder(
             itemCount: data.length,
             itemBuilder:(context,i)=>
@@ -367,7 +354,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
                 },
                 child: CustomItemCard(item: data[i]["product"],storeName: data[i]["store"].name,),
               )
-              );
+              ):SliverToBoxAdapter(child: Center(child: Text("There are no Product with: "+_searchController.text),));
               },
            error: (error,_)=>SliverToBoxAdapter(child: Text("an Error Occur"),),
             loading:()=>SliverToBoxAdapter(child: CustomLoading()))
@@ -389,75 +376,4 @@ class _SearchViewState extends ConsumerState<SearchView> {
     );
   }
 
-
-  Widget _buildItemUI() {
-    return Container();
-    // return Column(
-    //   crossAxisAlignment: CrossAxisAlignment.start,
-    //   children: [
-    //     SizedBox(
-    //       height: 100,
-    //       child: ListView.builder(
-    //         scrollDirection: Axis.horizontal,
-    //         padding: const EdgeInsets.symmetric(horizontal: 20),
-    //         itemCount: items.length,
-    //         itemBuilder: (context, index) {
-    //           Map item = items[index];
-    //           return Container(
-    //             width: 80,
-    //             margin: const EdgeInsets.only(right: 15),
-    //             child: Column(
-    //               children: [
-    //                 Container(
-    //                   height: 60,
-    //                   width: 60,
-    //                   decoration: BoxDecoration(
-    //                     color: Colors.white,
-    //                     borderRadius: BorderRadius.circular(30),
-    //                     boxShadow: [
-    //                       BoxShadow(
-    //                         color: Colors.grey.withOpacity(0.3),
-    //                         blurRadius: 5,
-    //                       ),
-    //                     ],
-    //                   ),
-    //                   child: const Icon(Icons.fastfood),
-    //                 ),
-    //                 const SizedBox(height: 6),
-    //                 Text(
-    //                   item['item'],
-    //                   style: const TextStyle(fontSize: 12),
-    //                   textAlign: TextAlign.center,
-    //                 ),
-    //               ],
-    //             ),
-    //           );
-    //         },
-    //       ),
-    //     ),
-
-    //     const SizedBox(height: 10),
-    //     Expanded(
-    //       child: ListView.builder(
-    //         padding: const EdgeInsets.symmetric(horizontal: 20),
-    //         itemCount: items.length,
-    //         itemBuilder: (context, index) {
-    //           return InkWell(
-    //             onTap: () async {
-    //               await Navigator.of(context).push(
-    //                 MaterialPageRoute(
-    //                   builder:
-    //                       (context) =>
-    //                           ItemShopsView(item: items[index], shops: shops),
-    //                 ),
-    //               );
-    //             },
-    //             child: CustomItemCard(item: items[index]),
-    //           );
-    //         },
-    //       ),
-    //     ),
-    //   ],
-    // );
-  }
 }

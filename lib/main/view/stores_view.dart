@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stores_app/external/widget/custom_loading.dart';
 import 'package:stores_app/external/widget/custom_store_card.dart';
 import 'package:stores_app/main/provider/stores_provider.dart';
-import 'package:stores_app/single_store/view/single_store_view.dart';
+import 'package:stores_app/store_details/single_shop_view.dart';
 
 class StoresView extends ConsumerStatefulWidget {
   @override
@@ -43,8 +43,9 @@ class _StoresViewState extends ConsumerState<StoresView> {
                   onTap: () async {
                     await Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => SingleStoreView(
-                          storeModel: data[i],
+                        builder: (context) => SingleShopView(
+                          getProducts:true,
+                          shop: data[i],
                         ),
                       ),
                     );

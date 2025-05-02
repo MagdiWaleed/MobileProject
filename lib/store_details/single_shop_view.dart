@@ -1,13 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stores_app/external/model/store_model.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
+import 'package:stores_app/external/widget/custom_loading.dart';
+import 'package:stores_app/store_details/provider/single_shop_provider.dart';
 
-class SingleShopView extends StatelessWidget {
+class SingleShopView extends ConsumerStatefulWidget {
   final StoreModel shop;
-  const SingleShopView({super.key, required this.shop});
+  SingleShopView({super.key, required this.shop, this.getProducts});
+  bool?getProducts;
+
+  @override
+  ConsumerState<SingleShopView> createState() => _SingleShopViewState();
+}
+
+class _SingleShopViewState extends ConsumerState<SingleShopView> {
+
+  @override
+  void initState() {
+    if(widget.getProducts??false){
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(storeDetailsProvider(widget.shop).notifier).getAllProducts(widget.shop);
+  });
+    }
+    
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final storeState = ref.watch(storeDetailsProvider(widget.shop));
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 90,
@@ -19,7 +42,7 @@ class SingleShopView extends StatelessWidget {
         ),
         backgroundColor: AppColors.mainColor,
         title: Text(
-          shop.name,
+          widget.shop.name,
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -34,7 +57,7 @@ class SingleShopView extends StatelessWidget {
         ],
       ),
 
-      body: Stack(
+      body: storeState.when(data: (shop)=>Stack(
         children: [
           Column(
             children: [
@@ -194,7 +217,8 @@ class SingleShopView extends StatelessWidget {
             ),
           ),
         ],
-      ),
+      ), error: (e,et)=>Text("an Error Occure"),
+       loading: ()=> Center(child: CustomLoading()))
     );
   }
 }
