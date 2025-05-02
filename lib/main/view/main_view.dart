@@ -21,7 +21,7 @@ class MainView extends StatefulWidget {
 class _MainViewState extends State<MainView> {
   int currentPageIndex = 1;
   int build_counter = 0;
-  final StoresBloc storesBloc= StoresBloc();
+  final StoresBloc storesBloc = StoresBloc();
   final MainProfileBloc mainProfileBloc = MainProfileBloc();
 
   List<String> appBarText = ["Search", "Stores", "Profile"];
@@ -31,6 +31,7 @@ class _MainViewState extends State<MainView> {
     storesBloc.add(StoresGetDataEvent());
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     build_counter++;
@@ -39,26 +40,26 @@ class _MainViewState extends State<MainView> {
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value) {
           setState(() {
-            if (value ==currentPageIndex &&  value ==1){
-              
+            if (value == currentPageIndex && value == 1) {
               storesBloc.add(StoresGetDataEvent());
-            }else if(value == currentPageIndex && value ==2){
+            } else if (value == currentPageIndex && value == 2) {
               mainProfileBloc.add(MainProfileGetDataEvent());
             }
-            
-            if(!visitedProfile){
+
+            if (!visitedProfile) {
               mainProfileBloc.add(MainProfileGetDataEvent());
-              visitedProfile= true;
+              visitedProfile = true;
             }
 
             currentPageIndex = value;
-            
-
           });
         },
         currentIndex: currentPageIndex,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.search_rounded), label: "Search"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search_rounded),
+            label: "Search",
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.store_mall_directory),
             label: "Stores",
@@ -100,7 +101,7 @@ class _MainViewState extends State<MainView> {
           [
             Placeholder(),
             StoresView(storesBloc: storesBloc),
-            MainProfileView(mainProfileBloc: mainProfileBloc,),
+            MainProfileView(),
           ][currentPageIndex],
     );
   }
