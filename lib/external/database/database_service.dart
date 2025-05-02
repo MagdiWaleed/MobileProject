@@ -246,6 +246,37 @@ Future<List<ProductModel>> getStoreProducts(int storeId) async {
   // }
 
 
+Future<List<StoreModel>> getStoresProductsMatching(String productName) async {
+  final db = await database;
+
+  final List<Map<String, dynamic>> result = await db.rawQuery('''
+    SELECT s.*, p.*
+    FROM $_storesTableName s
+    JOIN $_storesProductsRelationTableName spr ON s.$_storesIdColumnName = spr.$_storesProductsRelationStoreIdColumnName
+    JOIN $_productsTableName p ON p.$_productsIdColumnName = spr.$_storesProductsRelationProductIdColumnName
+    WHERE LOWER(p.$_productsNameColumnName) LIKE ?
+  ''', ['%${productName.toLowerCase()}%']);
+
+  // Group results by store_id
+  final Map<int, StoreModel> storeMap = {};
+  for (var row in result) {
+    int storeId = row[_storesIdColumnName];
+
+    if (!storeMap.containsKey(storeId)) {
+      storeMap[storeId] = StoreModel.fromMap(row);
+    }
+
+    // Create ProductModel and add to the store's product list
+    final product = ProductModel.fromMap(row);
+    storeMap[storeId]?.products.add(product);
+  }
+
+  return storeMap.values.toList();
+}
+
+
+
+
   Future<bool> deleteStore(int id) async {
     final store = getStoreById(id);
     if (store != null) {
