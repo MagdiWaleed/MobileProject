@@ -11,10 +11,11 @@ List? stores =[];
 FutureOr<List> build()=>stores??[];
 
 
-Future<void> getStoresStores ()async{
+Future<List> getStoresStores ()async{
   state =AsyncLoading();
   DatabaseService _database = DatabaseService.instance;
-   stores = await _database.getStores();
+  stores = await _database.getStores();
   state =AsyncData(stores!);
+  return stores!;
 }
 }

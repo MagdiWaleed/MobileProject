@@ -93,7 +93,7 @@ class _MainViewState extends ConsumerState<MainView> {
 
       body:
           [
-            Placeholder(),
+            SearchView(),
             StoresView(),
             MainProfileView(mainProfileBloc: mainProfileBloc,),
           ][currentPageIndex],

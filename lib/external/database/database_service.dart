@@ -189,7 +189,7 @@ Future<List<ProductModel>> getStoreProducts(int storeId) async {
     ON p.$_productsIdColumnName = spr.$_storesProductsRelationProductIdColumnName
     WHERE spr.$_storesProductsRelationStoreIdColumnName = ?
   ''', [storeId]);
-
+  print(data);
   return data.map((e) => ProductModel.fromMap(e)).toList();
 }
 

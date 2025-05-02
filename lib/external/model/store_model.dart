@@ -10,7 +10,7 @@ class StoreModel {
   final String image;
   final double store_location_longitude;
   final double store_location_latitude;
-  final List<ProductModel> products= [];
+  List<ProductModel> products= [];
 
 
   StoreModel({

@@ -1,43 +1,124 @@
 import 'package:flutter/material.dart';
+import 'package:stores_app/external/model/store_model.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
 
 class CustomShopCard extends StatelessWidget {
-  final Map<String, dynamic> shop;
+  final StoreModel shop;
 
   const CustomShopCard({Key? key, required this.shop}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final items =
-        (shop['items'] is List) ? List<String>.from(shop['items']) : <String>[];
+    final items = shop.products;  
     final showItems = items.length > 2 ? items.sublist(0, 2) : items;
     final extraCount = items.length > 2 ? items.length - 2 : 0;
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [BoxShadow(blurRadius: 4, color: Colors.black26)],
-        color: Colors.white,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 130,
-            width: double.infinity,
+    return Stack(
+      children: [
+        
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [BoxShadow(blurRadius: 5, color: const Color.fromARGB(255, 71, 71, 71))],
+            color: Colors.white,
+            
+          ),
+          margin: EdgeInsets.only(left: 2,right: 2, bottom: showItems.length ==1?10:0),
+          padding: EdgeInsets.only(bottom: 2),
+          child: Column(
+            children: [
+              Spacer(),
+
+              if (items.isNotEmpty) ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (var item in showItems) ...[
+                            Row(
+                              children: [
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(children: [
+                              SizedBox(width: 8),
+                                Image.network(
+                                  shop.image,
+                                  width: 16,
+                                  height: 16,
+                                ),
+                                      SizedBox(width: 15),
+                                      Text(
+                                        item.name,
+                                        style: const TextStyle(fontSize: 10),
+                                      ),
+                                      ],),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 5),
+                                         child: Divider(height: 2,thickness: 0.9,color: Colors.black,))
+                                    ],
+                                  ),
+                                ),
+                            const SizedBox(width: 10),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                          ],
+                        ],
+                      ),
+                    ),
+                            
+                  
+                  ],
+                ),
+        
+              ],
+            ],
+          ),
+        ),
+        if (extraCount!=0)
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: Container(
+            height: 60,width: 55,
             decoration: BoxDecoration(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(15),
+              color: AppColors.mainColor,
+              borderRadius: BorderRadiusDirectional.only(bottomEnd: Radius.circular(12))
+            ),
+            child: Column(
+              children: [
+                Spacer(),
+                Text("+${extraCount.toString()}",style: TextStyle(
+                  color: Colors.white,fontWeight: FontWeight.w200,
+                fontSize: 16),
+                ),
+                SizedBox(height: 18),
+              ],
+            ),
+            )),
+
+        Container(
+            height: 180,
+            // width: 200,
+
+              decoration: BoxDecoration(
+              borderRadius:  BorderRadius.circular(
+                12,
               ),
             ),
             child: Stack(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(15),
+                  borderRadius: BorderRadius.circular(
+                     12,
                   ),
-                  child: Image.asset(
-                    shop['image'],
+                  child: Image.network(
+                    shop.image,
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: double.infinity,
@@ -45,8 +126,8 @@ class CustomShopCard extends StatelessWidget {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(15),
+                    borderRadius:  BorderRadius.circular(
+                      12,
                     ),
                     color: AppColors.storesCardColor.withOpacity(0.6),
                   ),
@@ -59,7 +140,7 @@ class CustomShopCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        shop['name'],
+                        shop.name,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -72,7 +153,7 @@ class CustomShopCard extends StatelessWidget {
                           const Icon(Icons.star, color: Colors.amber, size: 16),
                           const SizedBox(width: 4),
                           Text(
-                            shop['rating'],
+                            shop.review.toString(),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 13,
@@ -86,72 +167,7 @@ class CustomShopCard extends StatelessWidget {
               ],
             ),
           ),
-
-          // item list
-          if (items.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          for (var item in showItems) ...[
-                            Row(
-                              children: [
-                                Image.asset(
-                                  shop['image'],
-                                  width: 16,
-                                  height: 16,
-                                ),
-                                const SizedBox(width: 6),
-                                Expanded(
-                                  child: Text(
-                                    item,
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                          ],
-                        ],
-                      ),
-                    ),
-
-                    if (extraCount > 0)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.mainColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          '+$extraCount',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-          ],
-        ],
-      ),
+      ],
     );
   }
 }
