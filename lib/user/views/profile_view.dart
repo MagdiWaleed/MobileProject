@@ -1,15 +1,17 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stores_app/user/controller/profile_controller.dart';
-import 'package:stores_app/user/controller/service/bloc/student_bloc.dart';
 import 'package:stores_app/external/model/user_model.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
 import 'package:stores_app/external/widget/custom_loading.dart';
 import 'package:stores_app/external/app_data.dart';
+import 'package:stores_app/user/provider/update_student_provider.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends ConsumerStatefulWidget {
   ProfilePage({super.key, required this.studentData});
   final StudentModel studentData;
 
@@ -17,9 +19,9 @@ class ProfilePage extends StatefulWidget {
   ProfilePageState createState() => ProfilePageState();
 }
 
-class ProfilePageState extends State<ProfilePage> {
+class ProfilePageState extends ConsumerState<ProfilePage> {
   final ProfileController _controller = ProfileController();
-  final _formKey = GlobalKey<FormState>(); // Key for form validation
+  final _formKey = GlobalKey<FormState>();
 
   void removeImage() {
     setState(() {
@@ -78,7 +80,7 @@ class ProfilePageState extends State<ProfilePage> {
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 decoration: BoxDecoration(border: Border.all(width: 0.1)),
                 child: ListTile(
-                  title: Text("Gallery"), // Fixed typo: "Galary" -> "Gallery"
+                  title: Text("Gallery"),
                   onTap: () {
                     _PICKIMAGE(false);
                     Navigator.pop(context);
@@ -109,7 +111,6 @@ class ProfilePageState extends State<ProfilePage> {
       backgroundColor: AppColors.backgroundColor,
       body: Stack(
         children: [
-          // Top blue container
           Container(
             height: 200,
             width: double.infinity,
@@ -121,7 +122,6 @@ class ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          // Profile title
           const Positioned(
             top: 60,
             left: 40,
@@ -134,7 +134,6 @@ class ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          // Logo image
           Positioned(
             top: 50,
             right: 30,
@@ -143,7 +142,6 @@ class ProfilePageState extends State<ProfilePage> {
               child: Image.asset('assets/images/logo.png', height: 60),
             ),
           ),
-          // Profile form card
           Align(
             alignment: Alignment.bottomCenter,
             child: SingleChildScrollView(
@@ -165,7 +163,6 @@ class ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // User image
                         GestureDetector(
                           onTap: () {
                             pickImage(context);
@@ -218,8 +215,6 @@ class ProfilePageState extends State<ProfilePage> {
                           style: TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                         const SizedBox(height: 15),
-
-                        // Name field with validation
                         TextFormField(
                           controller: _controller.nameController,
                           decoration: InputDecoration(
@@ -239,8 +234,6 @@ class ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                         const SizedBox(height: 10),
-
-                        // Email field with validation
                         TextFormField(
                           controller: _controller.emailController,
                           decoration: InputDecoration(
@@ -265,8 +258,6 @@ class ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                         const SizedBox(height: 10),
-
-                        // Student ID field with validation
                         TextFormField(
                           controller: _controller.studentIdController,
                           decoration: InputDecoration(
@@ -295,8 +286,6 @@ class ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                         const SizedBox(height: 10),
-
-                        // Password field with validation
                         TextFormField(
                           controller: _controller.passwordController,
                           obscureText: !_isPasswordVisible,
@@ -335,8 +324,6 @@ class ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                         const SizedBox(height: 10),
-
-                        // Confirm Password field with validation
                         TextFormField(
                           controller: _controller.confirmPasswordController,
                           obscureText: !_isPasswordVisible,
@@ -372,8 +359,6 @@ class ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                         const SizedBox(height: 15),
-
-                        // Preferences Card (Gender and Level)
                         Container(
                           width: double.infinity,
                           padding: const EdgeInsets.all(15),
@@ -384,7 +369,6 @@ class ProfilePageState extends State<ProfilePage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Gender selection
                               const Text(
                                 "Gender:",
                                 style: TextStyle(color: Colors.white),
@@ -428,8 +412,6 @@ class ProfilePageState extends State<ProfilePage> {
                                 ],
                               ),
                               const SizedBox(height: 10),
-
-                              // Level selection
                               const Text(
                                 "Level:",
                                 style: TextStyle(color: Colors.white),
@@ -465,8 +447,6 @@ class ProfilePageState extends State<ProfilePage> {
                                 }),
                               ),
                               const SizedBox(height: 10),
-
-                              // Clear Button
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: ElevatedButton(
@@ -494,8 +474,6 @@ class ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                         const SizedBox(height: 15),
-
-                        // Save Changes and Logout buttons
                         Row(
                           children: [
                             Expanded(
@@ -503,7 +481,7 @@ class ProfilePageState extends State<ProfilePage> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
-                                    _controller.updateData();
+                                    _controller.updateData(ref);
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -546,7 +524,6 @@ class ProfilePageState extends State<ProfilePage> {
                           ],
                         ),
                         const SizedBox(height: 8),
-
                         Row(
                           children: [
                             Expanded(
@@ -579,28 +556,39 @@ class ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          BlocConsumer<StudentBloc, StudentState>(
-            bloc: _controller.studentBloc,
-            builder: (context, state) {
-              switch (state.runtimeType) {
-                case StudentUpdateDataLoadingState:
-                  {
-                    return Positioned(
-                      left: 0,
-                      right: 0,
-                      top: 0,
-                      bottom: 0,
-                      child: CustomLoading(),
-                    );
-                  }
-                default:
-                  {
-                    return Container();
-                  }
+          Consumer(
+            builder: (context, ref, child) {
+              if (_controller.studentDataMap == null) {
+                return Container();
               }
-            },
-            listener: (context, state) {
-              _controller.showUpdateDataState(state, context);
+              final updateFuture = ref.watch(
+                updateStudentProvider(_controller.studentDataMap!),
+              );
+              return updateFuture.when(
+                data: (message) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    showTopSnackBar(
+                      Overlay.of(context),
+                      CustomSnackBar.success(message: message),
+                    );
+                    Navigator.pop(context, true);
+                  });
+                  return Container();
+                },
+                loading:
+                    () => const Positioned.fill(
+                      child: Center(child: CustomLoading()),
+                    ),
+                error: (error, stack) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    showTopSnackBar(
+                      Overlay.of(context),
+                      CustomSnackBar.error(message: error.toString()),
+                    );
+                  });
+                  return Container();
+                },
+              );
             },
           ),
         ],
