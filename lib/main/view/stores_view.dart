@@ -11,14 +11,6 @@ class StoresView extends ConsumerStatefulWidget {
 }
 
 class _StoresViewState extends ConsumerState<StoresView> {
-
-  @override
-  void initState() {
-    super.initState();
-   WidgetsBinding.instance.addPostFrameCallback((_) {
-    ref.read(storesProvider.notifier).getStoresStores();
-  });
-  }
   @override
   Widget build(BuildContext context) {
     final storesState = ref.watch(storesProvider);
