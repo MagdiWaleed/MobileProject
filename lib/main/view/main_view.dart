@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:stores_app/main/services/main_stores_service/stores_bloc.dart';
 import 'package:stores_app/main/view/main_profile_view.dart';
 import 'package:stores_app/main/view/search_view.dart';
 import 'package:stores_app/main/view/stores_view.dart';
@@ -19,7 +18,6 @@ class MainView extends ConsumerStatefulWidget {
 class _MainViewState extends ConsumerState<MainView> {
   int currentPageIndex = 1;
   int build_counter = 0;
-  final StoresBloc storesBloc = StoresBloc();
 
   bool visitedProfile = false;
 
@@ -49,7 +47,7 @@ class _MainViewState extends ConsumerState<MainView> {
 
           setState(() {
             if (value == currentPageIndex && value == 1) {
-              storesBloc.add(StoresGetDataEvent());
+
             } else if (value == currentPageIndex && value == 2) {
               ref.refresh(studentProfileProvider);
             }
@@ -107,8 +105,8 @@ class _MainViewState extends ConsumerState<MainView> {
 
       body:
           [
-            const Placeholder(),
-            StoresView(storesBloc: storesBloc),
+            SearchView(),
+             StoresView(),
             const MainProfileView(),
           ][currentPageIndex],
     );
