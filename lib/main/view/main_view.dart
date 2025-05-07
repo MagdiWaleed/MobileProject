@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:stores_app/external/widget/view_map.dart';
 import 'package:stores_app/main/view/main_profile_view.dart';
 import 'package:stores_app/main/view/search_view.dart';
 import 'package:stores_app/main/view/stores_view.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
 
-
 import 'package:stores_app/main/provider/main_profile_provider.dart';
 
 class MainView extends ConsumerStatefulWidget {
-  MainView({super.key});
+  const MainView({super.key});
   @override
   ConsumerState<MainView> createState() => _MainViewState();
 }
@@ -28,26 +28,33 @@ class _MainViewState extends ConsumerState<MainView> {
 
   @override
   Widget build(BuildContext context) {
-    
     build_counter++;
     return Scaffold(
-      floatingActionButton:currentPageIndex==0?FloatingActionButton.extended(
-        backgroundColor: AppColors.mainColor,
-        onPressed: (){}, 
-        label: Row(
-          children: [
-            Text('Map View',style: TextStyle(color: Colors.white,fontSize: 12),),
-          Icon(Icons.map, color: Colors.white, size: 18)
-          ],
-        )
-        ): Container(),
+      floatingActionButton:
+          currentPageIndex == 0
+              ? FloatingActionButton.extended(
+                backgroundColor: AppColors.mainColor,
+                onPressed: () async {
+                  await Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (context) => ViewMap()));
+                },
+                label: Row(
+                  children: [
+                    Icon(Icons.map, color: Colors.white),
+                    Text(
+                      ' View Map  ',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                  ],
+                ),
+              )
+              : Container(),
       backgroundColor: AppColors.backgroundColor,
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value) {
-
           setState(() {
             if (value == currentPageIndex && value == 1) {
-
             } else if (value == currentPageIndex && value == 2) {
               ref.refresh(studentProfileProvider);
             }
@@ -106,7 +113,7 @@ class _MainViewState extends ConsumerState<MainView> {
       body:
           [
             SearchView(),
-             StoresView(),
+            StoresView(),
             const MainProfileView(),
           ][currentPageIndex],
     );
