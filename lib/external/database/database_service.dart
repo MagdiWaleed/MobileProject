@@ -23,7 +23,6 @@ class DatabaseService {
   final String _productsImageColumnName = "product_image";
   final String _productsDescriptionColumnName = "product_description";
 
-
   final String _storesProductsRelationTableName = "storesProductRelation";
   final String _storesProductsRelationIdColumnName = "id";
   final String _storesProductsRelationStoreIdColumnName = "storeid";
@@ -37,15 +36,15 @@ class DatabaseService {
     return _db!;
   }
 
-Future<Database> getDatabase() async {
-  final databaseDirpath = await getDatabasesPath();
-  final databasePath = join(databaseDirpath, "stores_db.db");
+  Future<Database> getDatabase() async {
+    final databaseDirpath = await getDatabasesPath();
+    final databasePath = join(databaseDirpath, "stores_db.db");
 
-  final database = await openDatabase(
-    databasePath,
-    version: 1,
-    onCreate: (db, version) async {
-      await db.execute('''
+    final database = await openDatabase(
+      databasePath,
+      version: 1,
+      onCreate: (db, version) async {
+        await db.execute('''
         CREATE TABLE $_storesTableName (
           $_storesIdColumnName INTEGER NOT NULL,
           $_storesNameColumnName TEXT NOT NULL,
@@ -57,7 +56,7 @@ Future<Database> getDatabase() async {
         );
       ''');
 
-      await db.execute('''
+        await db.execute('''
         CREATE TABLE $_productsTableName (
           $_productsIdColumnName INTEGER NOT NULL,
           $_productsNameColumnName TEXT NOT NULL,
@@ -67,19 +66,18 @@ Future<Database> getDatabase() async {
         );
       ''');
 
-      await db.execute('''
+        await db.execute('''
         CREATE TABLE $_storesProductsRelationTableName (
           $_storesProductsRelationIdColumnName INTEGER PRIMARY KEY,
           $_storesProductsRelationStoreIdColumnName INTEGER NOT NULL,
           $_storesProductsRelationProductIdColumnName INTEGER NOT NULL
         );
       ''');
-    },
-  );
+      },
+    );
 
-  return database;
-}
-
+    return database;
+  }
 
   Future<bool> addStore(StoreModel store) async {
     final isExist = await getStoreById(store.id);
@@ -119,13 +117,13 @@ Future<Database> getDatabase() async {
     }
   }
 
-  Future<bool> addStoreProductRelation(int storeid,int productid) async {
-    final isExist = await getStoreProductRelation(storeid,productid);
+  Future<bool> addStoreProductRelation(int storeid, int productid) async {
+    final isExist = await getStoreProductRelation(storeid, productid);
     if (isExist == null) {
       final db = await database;
       await db.insert(_storesProductsRelationTableName, {
-        _storesProductsRelationStoreIdColumnName:storeid,
-        _storesProductsRelationProductIdColumnName:productid
+        _storesProductsRelationStoreIdColumnName: storeid,
+        _storesProductsRelationProductIdColumnName: productid,
       });
       return true;
     } else {
@@ -163,38 +161,39 @@ Future<Database> getDatabase() async {
     }
   }
 
-Future<Map?> getStoreProductRelation(int storeid,int productid) async {
-  final db = await database;
-  final data = await db.query(
-    _storesProductsRelationTableName,
-    where: '$_storesProductsRelationStoreIdColumnName = ? AND $_storesProductsRelationProductIdColumnName = ?',
-    whereArgs: [storeid,productid],
-  );
+  Future<Map?> getStoreProductRelation(int storeid, int productid) async {
+    final db = await database;
+    final data = await db.query(
+      _storesProductsRelationTableName,
+      where:
+          '$_storesProductsRelationStoreIdColumnName = ? AND $_storesProductsRelationProductIdColumnName = ?',
+      whereArgs: [storeid, productid],
+    );
 
-  if (data.isNotEmpty) {
-    return data.first;
-  } else {
-    return null;
+    if (data.isNotEmpty) {
+      return data.first;
+    } else {
+      return null;
+    }
   }
-}
 
+  Future<List<ProductModel>> getStoreProducts(int storeId) async {
+    final db = await database;
 
-Future<List<ProductModel>> getStoreProducts(int storeId) async {
-  final db = await database;
-
-  final List<Map<String, dynamic>> data = await db.rawQuery('''
+    final List<Map<String, dynamic>> data = await db.rawQuery(
+      '''
     SELECT p.*
     FROM $_productsTableName p
     JOIN $_storesProductsRelationTableName spr
     ON p.$_productsIdColumnName = spr.$_storesProductsRelationProductIdColumnName
     WHERE spr.$_storesProductsRelationStoreIdColumnName = ?
-  ''', [storeId]);
-  print(data);
-  return data.map((e) => ProductModel.fromMap(e)).toList();
-}
+  ''',
+      [storeId],
+    );
+    print(data);
+    return data.map((e) => ProductModel.fromMap(e)).toList();
+  }
 
-
- 
   Future<List<StoreModel>?> getStores() async {
     try {
       final db = await database;
@@ -218,13 +217,13 @@ Future<List<ProductModel>> getStoreProducts(int storeId) async {
     }
   }
 
-
   Future<List<ProductModel>?> getProducts() async {
     try {
       final db = await database;
       final data = await db.query(_productsTableName);
       print(data);
-      List<ProductModel> products = data.map((e) => ProductModel.fromMap(e)).toList();
+      List<ProductModel> products =
+          data.map((e) => ProductModel.fromMap(e)).toList();
       return products;
     } catch (e) {
       print(e);
@@ -245,62 +244,60 @@ Future<List<ProductModel>> getStoreProducts(int storeId) async {
   //   }
   // }
 
+  Future<List<StoreModel>> getStoresProductsMatching(String productName) async {
+    final db = await database;
 
-Future<List<StoreModel>> getStoresProductsMatching(String productName) async {
-  final db = await database;
-
-  final List<Map<String, dynamic>> result = await db.rawQuery('''
+    final List<Map<String, dynamic>> result = await db.rawQuery(
+      '''
     SELECT s.*, p.*
     FROM $_storesTableName s
     JOIN $_storesProductsRelationTableName spr ON s.$_storesIdColumnName = spr.$_storesProductsRelationStoreIdColumnName
     JOIN $_productsTableName p ON p.$_productsIdColumnName = spr.$_storesProductsRelationProductIdColumnName
     WHERE LOWER(p.$_productsNameColumnName) LIKE ?
-  ''', ['%${productName.toLowerCase()}%']);
+  ''',
+      ['%${productName.toLowerCase()}%'],
+    );
 
-  final List<StoreModel> stores= [];
-  // print(result[0]);
-  for (var row in result) {
-    final StoreModel store = StoreModel.fromMap(row);
-    if( stores.contains(store)){
-      int index = stores.indexWhere((single_store) => single_store.id == store.id);
-      stores[index].products.add(ProductModel.fromMap(row));
-      continue;
-    }else{
-      store.products.add(ProductModel.fromMap(row));
-      stores.add(store);
+    final List<StoreModel> stores = [];
+    // print(result[0]);
+    for (var row in result) {
+      final StoreModel store = StoreModel.fromMap(row);
+      if (stores.contains(store)) {
+        int index = stores.indexWhere(
+          (singleStore) => singleStore.id == store.id,
+        );
+        stores[index].products.add(ProductModel.fromMap(row));
+        continue;
+      } else {
+        store.products.add(ProductModel.fromMap(row));
+        stores.add(store);
+      }
     }
-  
+
+    return stores;
   }
-
-  return stores;
-}
-
-
-
 
   Future<bool> deleteStore(int id) async {
     final store = getStoreById(id);
-    if (store != null) {
-      final db = await database;
-      await db.delete(
-        _storesTableName,
-        where: '$_storesIdColumnName = ?',
-        whereArgs: [id],
-      );
-      return true;
-    } else {
-      return false;
-    }
+    final db = await database;
+    await db.delete(
+      _storesTableName,
+      where: '$_storesIdColumnName = ?',
+      whereArgs: [id],
+    );
+    return true;
   }
 
   Future<void> deleteAllProducts() async {
     final db = await database;
     await db.delete(_productsTableName);
   }
+
   Future<void> deleteAllStoresProductsRelations() async {
     final db = await database;
     await db.delete(_storesProductsRelationTableName);
   }
+
   Future<void> deleteAllStores() async {
     final db = await database;
     await db.delete(_storesTableName);

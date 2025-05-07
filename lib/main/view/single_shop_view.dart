@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stores_app/external/model/store_model.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
+import 'package:stores_app/external/widget/view_directions.dart';
 
 class SingleShopView extends StatelessWidget {
   final StoreModel shop;
@@ -25,6 +26,12 @@ class SingleShopView extends StatelessWidget {
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            return Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back, color: Colors.white),
         ),
         actions: [
           ClipRRect(
@@ -134,7 +141,7 @@ class SingleShopView extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                   Text(
+                                  Text(
                                     shop.products[index].name,
                                     style: TextStyle(
                                       fontSize: 16,
@@ -174,7 +181,12 @@ class SingleShopView extends StatelessWidget {
             right: 16,
             child: ElevatedButton.icon(
               onPressed: () {
-                //TODO: map view logic  <<-- this is Rama's part
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ViewDirections(store: shop),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.mainColor,
@@ -186,9 +198,9 @@ class SingleShopView extends StatelessWidget {
                   vertical: 8,
                 ),
               ),
-              icon: const Icon(Icons.map, color: Colors.white, size: 18),
+              icon: const Icon(Icons.directions, color: Colors.white, size: 18),
               label: const Text(
-                'Map View',
+                'Get Directions',
                 style: TextStyle(color: Colors.white),
               ),
             ),
