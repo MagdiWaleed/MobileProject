@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:stores_app/external/app_data.dart';
 import 'package:stores_app/external/model/product_model.dart';
 import 'package:stores_app/external/model/store_model.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
@@ -8,7 +9,8 @@ class CustomItemCard extends StatelessWidget {
   final ProductModel item;
   final String storeName;
 
-  const CustomItemCard({Key? key, required this.item, required this.storeName}) : super(key: key);
+  const CustomItemCard({Key? key, required this.item, required this.storeName})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +35,11 @@ class CustomItemCard extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      'assets/images/logo.png',
+                    child: Image.network(
+                      "${AppData.SERVER_URL}/items/${item.id}/image",
                       width: 90,
                       height: 90,
                       fit: BoxFit.cover,
-                    
-        
                     ),
                   ),
                   const SizedBox(width: 12),

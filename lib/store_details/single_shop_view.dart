@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:stores_app/external/app_data.dart';
 import 'package:stores_app/external/model/store_model.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
 import 'package:stores_app/external/widget/view_directions.dart';
@@ -194,7 +195,9 @@ class _SingleShopViewState extends ConsumerState<SingleShopView> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
                                     child: Image.network(
-                                      shop.image,
+                                      "${AppData.SERVER_URL}/items/${shop.products[index].id}/image",
+
+                                      //shop.products[index].image,
                                       width: 80,
                                       height: 80,
                                       fit: BoxFit.cover,

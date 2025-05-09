@@ -302,4 +302,11 @@ class DatabaseService {
     final db = await database;
     await db.delete(_storesTableName);
   }
+
+  Future<void> deleteAll() async {
+    final db = await database;
+    await db.delete(_storesTableName);
+    await db.delete(_productsTableName);
+    await db.delete(_storesProductsRelationTableName);
+  }
 }

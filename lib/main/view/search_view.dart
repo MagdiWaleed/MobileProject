@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:stores_app/external/app_data.dart';
 import 'package:stores_app/external/widget/custom_item_card.dart';
 import 'package:stores_app/external/widget/custom_loading.dart';
 import 'package:stores_app/external/widget/custom_shop_card.dart';
@@ -327,8 +328,8 @@ class _SearchViewState extends ConsumerState<SearchView> {
                                       ),
                                     ],
                                   ),
-                                  child: Image.asset(
-                                    'assets/images/logo.png',
+                                  child: Image.network(
+                                    "${AppData.SERVER_URL}/items/${data[index]['id']}/image",
                                     width: 60,
                                     height: 60,
                                     fit: BoxFit.cover,

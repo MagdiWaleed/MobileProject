@@ -22,7 +22,6 @@ class Splash extends ConsumerStatefulWidget {
 }
 
 class _SplashState extends ConsumerState<Splash> {
-
   void am_i_logged_in() async {
     setState(() {
       start_loading = true;
@@ -35,15 +34,15 @@ class _SplashState extends ConsumerState<Splash> {
         context,
       ).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
     } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => MainView()),
-      );
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (context) => MainView()));
     }
   }
 
   @override
   void initState() {
-    AppData.SERVER_URL = "http://192.168.1.10:5000";
+    AppData.SERVER_URL = "https://api1.almahil.com";
     am_i_logged_in();
     super.initState();
   }
@@ -74,149 +73,154 @@ class _SplashState extends ConsumerState<Splash> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(getStoresDataSplashProvider, (_,next)=>next.whenOrNull(
-      error: (_, _)=>showTopSnackBar(
-                                Overlay.of(context),
-                                CustomSnackBar.error(
-                                  message: "Couldn't Load The Data From The Server",
-                                ),
-                              ),data: (_)=> print("lessgo")
-    ));
+    ref.listen(
+      getStoresDataSplashProvider,
+      (_, next) => next.whenOrNull(
+        error:
+            (_, _) => showTopSnackBar(
+              Overlay.of(context),
+              CustomSnackBar.error(
+                message: "Couldn't Load The Data From The Server",
+              ),
+            ),
+        data: (_) => print("lessgo"),
+      ),
+    );
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           start_loading
-              ?
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 35),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Colors.white,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(60),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-
-                  height: 200,
-                  width: 200,
-                  child: LoadingIndicator(
-                    indicatorType: Indicator.ballRotate,
-
-                    colors: const [
-                      AppColors.mainColor,
-                      AppColors.mainColor,
-                      AppColors.mainColor,
-                    ],
-
-                    // colors: const [Colors.white,Colors.white,Colors.white,],
-                    strokeWidth: 2,
-                  ),
+              ? Container(
+                margin: EdgeInsets.symmetric(horizontal: 35),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.white,
                 ),
-              ],
-            ),
-          )
-          : Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                TextField(
-                  controller: _textEditingController,
-                  decoration: InputDecoration(
-                    labelText: 'http://192.168.1.20:5000',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(60),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+
+                      height: 200,
+                      width: 200,
+                      child: LoadingIndicator(
+                        indicatorType: Indicator.ballRotate,
+
+                        colors: const [
+                          AppColors.mainColor,
+                          AppColors.mainColor,
+                          AppColors.mainColor,
+                        ],
+
+                        // colors: const [Colors.white,Colors.white,Colors.white,],
+                        strokeWidth: 2,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            setState(() {
-                              start_loading = true;
-                            });
-                            AppData.SERVER_URL =
-                                _textEditingController.value.text;
-                            if (await checkServer()) {
-                              showTopSnackBar(
-                                Overlay.of(context),
-                                CustomSnackBar.success(
-                                  message: "Connected Successfully",
-                                ),
-                              );
-                              am_i_logged_in();
-                            } else {
-                              showTopSnackBar(
-                                Overlay.of(context),
-                                CustomSnackBar.error(
-                                  message: "Error in connecting",
-                                ),
-                              );
-                            }
-                            setState(() {
-                              start_loading = false;
-                            });
-                          },
-                          child: Text(
-                            "Connect",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.mainColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
+              )
+              : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _textEditingController,
+                      decoration: InputDecoration(
+                        labelText: 'http://192.168.1.20:5000',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:  8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                                final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                
-                                await prefs.remove('token');
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                setState(() {
+                                  start_loading = true;
+                                });
+                                AppData.SERVER_URL =
+                                    _textEditingController.value.text;
+                                if (await checkServer()) {
                                   showTopSnackBar(
-                                Overlay.of(context),
-                                CustomSnackBar.info(
-                                  message: "Token Deleted Successfully",
-                                ));
-                        
-                          },
-                          child: Text(
-                            "Delete Token",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                                    Overlay.of(context),
+                                    CustomSnackBar.success(
+                                      message: "Connected Successfully",
+                                    ),
+                                  );
+                                  am_i_logged_in();
+                                } else {
+                                  showTopSnackBar(
+                                    Overlay.of(context),
+                                    CustomSnackBar.error(
+                                      message: "Error in connecting",
+                                    ),
+                                  );
+                                }
+                                setState(() {
+                                  start_loading = false;
+                                });
+                              },
+                              child: Text(
+                                "Connect",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.mainColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                final SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+
+                                await prefs.remove('token');
+                                showTopSnackBar(
+                                  Overlay.of(context),
+                                  CustomSnackBar.info(
+                                    message: "Token Deleted Successfully",
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Delete Token",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
         ],
       ),
     );
