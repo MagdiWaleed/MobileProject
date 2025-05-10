@@ -31,8 +31,7 @@ class _ViewDirectionsState extends State<ViewDirections> {
   Future<void> _getUserLocation() async {
     try {
       final position = await Geolocator.getCurrentPosition();
-      //final userLatLng = LatLng(position.latitude, position.longitude);
-      final userLatLng = LatLng(30.0, 31.0);
+      final userLatLng = LatLng(position.latitude, position.longitude);
       final storeLatLng = LatLng(
         widget.store.store_location_latitude,
         widget.store.store_location_longitude,

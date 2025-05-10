@@ -74,12 +74,10 @@ class StudentRepo {
   }
 
   static Future<Map<String, dynamic>> login(
-    String email, String password
+    String email,
+    String password,
   ) async {
-    Map<String, dynamic> studentData ={
-      "email": email,
-      "password": password
-    };
+    Map<String, dynamic> studentData = {"email": email, "password": password};
     final client = http.Client();
 
     try {

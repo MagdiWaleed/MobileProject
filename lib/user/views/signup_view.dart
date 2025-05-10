@@ -15,17 +15,17 @@ class SignupPage extends ConsumerStatefulWidget {
 }
 
 class SignupPageState extends ConsumerState<SignupPage> {
-  
   void nextPage() {
-      if (currentPage < 2) {
-        currentPage++;
-        pageController.animateToPage(
-          currentPage,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
+    if (currentPage < 2) {
+      currentPage++;
+      pageController.animateToPage(
+        currentPage,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
     }
+  }
+
   final List<TextEditingController> textFieldControllers = [
     TextEditingController(), //email
     TextEditingController(), //id
@@ -36,8 +36,7 @@ class SignupPageState extends ConsumerState<SignupPage> {
 
   final _formKeyPage1 = GlobalKey<FormState>();
   final _formKeyPage2 = GlobalKey<FormState>();
-  final PageController pageController =
-              PageController(); 
+  final PageController pageController = PageController();
   int currentPage = 0;
 
   String? selectedGender;
@@ -45,10 +44,10 @@ class SignupPageState extends ConsumerState<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(signupProvider, (prev,next){
+    ref.listen(signupProvider, (prev, next) {
       next.whenOrNull(
         data: (data) {
-        showTopSnackBar(
+          showTopSnackBar(
             Overlay.of(context),
             CustomSnackBar.success(message: data!.toString()),
           );
@@ -56,11 +55,12 @@ class SignupPageState extends ConsumerState<SignupPage> {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => MainView()),
           );
-      },
-      error: (e,_)=>  showTopSnackBar(
-            Overlay.of(context),
-            CustomSnackBar.error(message: e.toString()),
-          )
+        },
+        error:
+            (e, _) => showTopSnackBar(
+              Overlay.of(context),
+              CustomSnackBar.error(message: e.toString()),
+            ),
       );
     });
     final signupState = ref.watch(signupProvider);
@@ -129,10 +129,8 @@ class SignupPageState extends ConsumerState<SignupPage> {
                 TextButton(
                   onPressed: () {
                     if (_formKeyPage1.currentState!.validate()) {
-                      String email =
-                          textFieldControllers[0].text.trim();
-                      String studentId =
-                          textFieldControllers[1].text.trim();
+                      String email = textFieldControllers[0].text.trim();
+                      String studentId = textFieldControllers[1].text.trim();
                       String studentIdFromEmail = email.split('@')[0];
                       if (studentIdFromEmail == studentId) {
                         nextPage();
@@ -345,20 +343,20 @@ class SignupPageState extends ConsumerState<SignupPage> {
               ),
               onPressed: () {
                 final Map<String, dynamic> studentData = {
-                      "name": textFieldControllers[2].value.text,
-                      "email": textFieldControllers[0].value.text,
-                      "student_id": int.parse(textFieldControllers[1].value.text),
-                      "password": textFieldControllers[3].value.text,
-                      "level": selectedLevel,
-                      "gender":
-                          selectedGender == null
-                              ? null
-                              : selectedGender == "Male"
-                              ? 0
-                              : 1,
-                    };            
-                    ref.read(signupProvider.notifier).signup(studentData);
-                      },
+                  "name": textFieldControllers[2].value.text,
+                  "email": textFieldControllers[0].value.text,
+                  "student_id": int.parse(textFieldControllers[1].value.text),
+                  "password": textFieldControllers[3].value.text,
+                  "level": selectedLevel,
+                  "gender":
+                      selectedGender == null
+                          ? null
+                          : selectedGender == "Male"
+                          ? 0
+                          : 1,
+                };
+                ref.read(signupProvider.notifier).signup(studentData);
+              },
               child: Text(
                 "FINISH",
                 style: const TextStyle(fontSize: 16, color: Colors.white),
@@ -443,16 +441,14 @@ class SignupPageState extends ConsumerState<SignupPage> {
                 ),
             ],
           ),
-          if(signupState.isLoading)
-              Positioned(
-                      left: 0,
-                      right: 0,
-                      top: 0,
-                      bottom: 0,
-                      child: CustomLoading(),
-                  
-           
-          ),
+          if (signupState.isLoading)
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+              child: CustomLoading(),
+            ),
         ],
       ),
     );

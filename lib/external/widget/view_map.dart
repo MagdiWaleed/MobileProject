@@ -9,6 +9,36 @@ import 'package:stores_app/store_details/single_shop_view.dart';
 import 'package:stores_app/external/widget/custom_loading.dart';
 import 'package:stores_app/external/model/store_model.dart';
 
+Future<Position> _getCurrentLocation() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+  // Check if location services are enabled
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    throw Exception('Location services are disabled.');
+  }
+  // Check for location permissions
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      throw Exception('Location permissions are denied.');
+    }
+  }
+  if (permission == LocationPermission.deniedForever) {
+    throw Exception('Location permissions are permanently denied.');
+  }
+  // Get the current position
+  return await Geolocator.getCurrentPosition();
+}
+
+late Position userPosition;
+
+Future<Position> _initializeUserPosition() async {
+  userPosition = await _getCurrentLocation();
+  return userPosition;
+}
+
 class ViewMap extends ConsumerStatefulWidget {
   const ViewMap({Key? key}) : super(key: key);
 
@@ -17,7 +47,7 @@ class ViewMap extends ConsumerStatefulWidget {
 }
 
 class _ViewMapState extends ConsumerState<ViewMap> {
-  LatLng _userLocation = LatLng(30, 31);
+  LatLng _userLocation = LatLng(userPosition.latitude, userPosition.longitude);
   bool _locationReady = false;
   final MapController _mapController = MapController();
   String _selectedDistance = '';
@@ -27,6 +57,7 @@ class _ViewMapState extends ConsumerState<ViewMap> {
   void initState() {
     super.initState();
     _initLocation();
+    _initializeUserPosition();
   }
 
   Future<void> _initLocation() async {

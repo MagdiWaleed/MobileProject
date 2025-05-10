@@ -1,5 +1,3 @@
-// main_profile_view.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stores_app/external/app_data.dart';

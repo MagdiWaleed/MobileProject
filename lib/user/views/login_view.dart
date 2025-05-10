@@ -8,10 +8,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-class LoginPage extends  ConsumerWidget{
+class LoginPage extends ConsumerWidget {
   LoginPage({super.key});
   final _formKey = GlobalKey<FormState>();
-  
+
   final List<TextEditingController> textFieldControllers = [
     TextEditingController(),
     TextEditingController(),
@@ -20,24 +20,24 @@ class LoginPage extends  ConsumerWidget{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<AsyncValue<String>>(loginProvider, (prev, next) {
-    next.whenOrNull(
-      data: (message) {
-        showTopSnackBar(
-          Overlay.of(context),
-          CustomSnackBar.success(message: message),
-        );
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>MainView()));
-
-      },
-      error: (e, _) {
-        showTopSnackBar(
-          Overlay.of(context),
-          CustomSnackBar.error(message: e.toString()),
-        );
-      },
-    );
-  });
-
+      next.whenOrNull(
+        data: (message) {
+          showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.success(message: message),
+          );
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => MainView()),
+          );
+        },
+        error: (e, _) {
+          showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.error(message: e.toString()),
+          );
+        },
+      );
+    });
 
     final loginState = ref.watch(loginProvider);
     return Scaffold(
@@ -171,10 +171,13 @@ class LoginPage extends  ConsumerWidget{
                           ),
                         ),
                         onPressed: () async {
-                          if (_formKey.currentState!.validate()){
-                           
-                              await ref.read(loginProvider.notifier).login(textFieldControllers[0].text, textFieldControllers[1].text);
-                            
+                          if (_formKey.currentState!.validate()) {
+                            await ref
+                                .read(loginProvider.notifier)
+                                .login(
+                                  textFieldControllers[0].text,
+                                  textFieldControllers[1].text,
+                                );
                           }
                         },
                         child: const Text(
@@ -212,16 +215,14 @@ class LoginPage extends  ConsumerWidget{
               ),
             ),
           ),
-          if(loginState.isLoading)
-           Positioned(
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    child: CustomLoading(),
-                  )
-              
-          
+          if (loginState.isLoading)
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+              child: CustomLoading(),
+            ),
         ],
       ),
     );

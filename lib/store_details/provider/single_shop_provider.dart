@@ -5,25 +5,25 @@ import 'package:stores_app/external/model/store_model.dart';
 part 'single_shop_provider.g.dart';
 
 @riverpod
-class StoreDetails extends _$StoreDetails{
-
+class StoreDetails extends _$StoreDetails {
   @override
-  Future<StoreModel> build(StoreModel store)async{
+  Future<StoreModel> build(StoreModel store) async {
     return store;
   }
 
-
-  Future<StoreModel> getAllProducts(StoreModel store)async{
+  Future<StoreModel> getAllProducts(StoreModel store) async {
     state = AsyncLoading();
-  try{
-  DatabaseService _database = DatabaseService.instance;
+    try {
+      DatabaseService _database = DatabaseService.instance;
 
-  final List<ProductModel> products =await _database.getStoreProducts(store.id);
-  store.products = products;
-  state =AsyncData(store);
-  }catch(error, stackTrace){
-    state = AsyncError(error, stackTrace);
+      final List<ProductModel> products = await _database.getStoreProducts(
+        store.id,
+      );
+      store.products = products;
+      state = AsyncData(store);
+    } catch (error, stackTrace) {
+      state = AsyncError(error, stackTrace);
+    }
+    return store;
   }
-  return store;
-}
 }
