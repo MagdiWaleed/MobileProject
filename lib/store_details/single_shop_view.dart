@@ -188,6 +188,16 @@ class _SingleShopViewState extends ConsumerState<SingleShopView> {
                                           style: TextStyle(color: Colors.grey),
                                         ),
                                         const SizedBox(height: 8),
+                                        Text(
+                                          "Price: L.E. " +
+                                              (shop.products[index].price * 10)
+                                                  .toString(),
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.mainColor,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),

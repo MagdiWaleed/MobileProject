@@ -10,8 +10,7 @@ class StoreModel {
   final String image;
   final double store_location_longitude;
   final double store_location_latitude;
-  List<ProductModel> products= [];
-
+  List<ProductModel> products = [];
 
   StoreModel({
     required this.id,
@@ -42,7 +41,7 @@ class StoreModel {
       store_location_longitude: data['store_location_longitude'],
       store_location_latitude: data['store_location_latitude'],
       review: data['store_review'],
-      image: AppData.SERVER_URL! +"/"+ data['store_image'],
+      image: AppData.SERVER_URL! + "/" + data['store_image'],
       store_description: data["store_description"],
     );
   }
@@ -50,13 +49,11 @@ class StoreModel {
     return faker.image.image(random: true);
   }
 
-    @override
+  @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is StoreModel && runtimeType == other.runtimeType && id == other.id;
 
   @override
   int get hashCode => id.hashCode;
-
-
 }

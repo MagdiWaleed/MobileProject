@@ -67,6 +67,15 @@ class CustomItemCard extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "Price: L.E. ${item.price * 10}",
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.mainColor,
+                          ),
+                        ),
                       ],
                     ),
                   ),

@@ -3,9 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:stores_app/external/app_data.dart';
 
-
 class SplashRepo {
-static Future<Map<String, dynamic>> getStoresData() async {
+  static Future<Map<String, dynamic>> getStoresData() async {
     final client = http.Client();
     try {
       var response = await client.get(
@@ -24,7 +23,8 @@ static Future<Map<String, dynamic>> getStoresData() async {
       return {'status': false, "error": e};
     }
   }
- static Future<Map<String, dynamic>> getProductsData() async {
+
+  static Future<Map<String, dynamic>> getProductsData() async {
     final client = http.Client();
     try {
       var response = await client.get(
@@ -44,7 +44,7 @@ static Future<Map<String, dynamic>> getStoresData() async {
     }
   }
 
- static Future<Map<String, dynamic>> getStoresProductsRelations() async {
+  static Future<Map<String, dynamic>> getStoresProductsRelations() async {
     final client = http.Client();
     try {
       var response = await client.get(
@@ -63,6 +63,4 @@ static Future<Map<String, dynamic>> getStoresData() async {
       return {'status': false, "error": e};
     }
   }
-
-
 }
