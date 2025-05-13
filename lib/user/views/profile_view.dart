@@ -500,27 +500,27 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                               ),
                             ),
                             SizedBox(width: 10),
-                            Expanded(
-                              flex: 3,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  _controller.logout(context);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.redAccent,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: const Text(
-                                  "Logout",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            // Expanded(
+                            //   flex: 3,
+                            //   child: ElevatedButton(
+                            //     onPressed: () {
+                            //       _controller.logout(context);
+                            //     },
+                            //     style: ElevatedButton.styleFrom(
+                            //       backgroundColor: Colors.redAccent,
+                            //       shape: RoundedRectangleBorder(
+                            //         borderRadius: BorderRadius.circular(10),
+                            //       ),
+                            //     ),
+                            //     child: const Text(
+                            //       "Logout",
+                            //       style: TextStyle(
+                            //         fontSize: 16,
+                            //         color: Colors.white,
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                         const SizedBox(height: 8),

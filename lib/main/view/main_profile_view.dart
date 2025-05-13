@@ -7,9 +7,12 @@ import 'package:stores_app/main/provider/main_profile_provider.dart';
 import 'package:stores_app/user/views/profile_view.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'package:stores_app/user/controller/profile_controller.dart';
 
 class MainProfileView extends ConsumerWidget {
-  const MainProfileView({super.key});
+  MainProfileView({super.key});
+  // import   final ProfileController _controller = ProfileController(); to perform logout
+  final ProfileController _controller = ProfileController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -81,6 +84,23 @@ class MainProfileView extends ConsumerWidget {
                     ),
                     child: const Text(
                       "View Profile",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                  // add a logout button in the same line of the view profile button
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      _controller.logout(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 249, 6, 6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      "Logout",
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   ),

@@ -110,12 +110,7 @@ class _MainViewState extends ConsumerState<MainView> {
         leading: Container(),
       ),
 
-      body:
-          [
-            SearchView(),
-            StoresView(),
-            const MainProfileView(),
-          ][currentPageIndex],
+      body: [SearchView(), StoresView(), MainProfileView()][currentPageIndex],
     );
   }
 }
