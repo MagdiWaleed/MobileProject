@@ -11,7 +11,6 @@ import 'package:stores_app/user/controller/profile_controller.dart';
 
 class MainProfileView extends ConsumerWidget {
   MainProfileView({super.key});
-  // import   final ProfileController _controller = ProfileController(); to perform logout
   final ProfileController _controller = ProfileController();
 
   @override
@@ -31,6 +30,7 @@ class MainProfileView extends ConsumerWidget {
             Container(
               width: 330,
               padding: const EdgeInsets.all(20),
+              margin: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
@@ -63,46 +63,59 @@ class MainProfileView extends ConsumerWidget {
                   const SizedBox(height: 10),
                   Text(studentData.email, style: const TextStyle(fontSize: 16)),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final result = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder:
-                              (context) =>
-                                  ProfilePage(studentData: studentData),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final result = await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                        ProfilePage(studentData: studentData),
+                              ),
+                            );
+                            if (result == true) {
+                              ref.refresh(studentProfileProvider);
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.mainColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text(
+                            "View Profile",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
                         ),
-                      );
-                      if (result == true) {
-                        ref.refresh(studentProfileProvider);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.mainColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
                       ),
-                    ),
-                    child: const Text(
-                      "View Profile",
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
-                  ),
-                  // add a logout button in the same line of the view profile button
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      _controller.logout(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 249, 6, 6),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _controller.logout(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(
+                              255,
+                              249,
+                              6,
+                              6,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text(
+                            "Logout",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                        ),
                       ),
-                    ),
-                    child: const Text(
-                      "Logout",
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
+                    ],
                   ),
                 ],
               ),

@@ -33,6 +33,7 @@ class ProfileController {
     nameController.text = studentData.name;
     emailController.text = studentData.email;
     passwordController.text = studentData.password;
+    studentIdController.text = studentData.student_id.toString();
     confirmPasswordController.text = studentData.password;
     selectedGender = studentData.gender;
     selectedLevel = studentData.level;
@@ -64,7 +65,6 @@ class ProfileController {
           selectedGender == null ? null : (selectedGender == "Male" ? 0 : 1),
     };
 
-    // استدعاء FutureProvider
     ref.read(updateStudentProvider(studentDataMap!));
   }
 }

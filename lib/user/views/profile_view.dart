@@ -236,10 +236,19 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: _controller.emailController,
+                          readOnly: true,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                           decoration: InputDecoration(
                             labelText: "Email",
+                            labelStyle: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
                             filled: true,
-                            fillColor: AppColors.textFieldColor,
+                            fillColor: AppColors.mainColor,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: BorderSide.none,
@@ -260,10 +269,19 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: _controller.studentIdController,
+                          readOnly: true,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                           decoration: InputDecoration(
                             labelText: "Student ID",
+                            labelStyle: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
                             filled: true,
-                            fillColor: AppColors.textFieldColor,
+                            fillColor: AppColors.mainColor,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: BorderSide.none,
@@ -499,28 +517,6 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10),
-                            // Expanded(
-                            //   flex: 3,
-                            //   child: ElevatedButton(
-                            //     onPressed: () {
-                            //       _controller.logout(context);
-                            //     },
-                            //     style: ElevatedButton.styleFrom(
-                            //       backgroundColor: Colors.redAccent,
-                            //       shape: RoundedRectangleBorder(
-                            //         borderRadius: BorderRadius.circular(10),
-                            //       ),
-                            //     ),
-                            //     child: const Text(
-                            //       "Logout",
-                            //       style: TextStyle(
-                            //         fontSize: 16,
-                            //         color: Colors.white,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         ),
                         const SizedBox(height: 8),
