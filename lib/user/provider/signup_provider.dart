@@ -10,16 +10,17 @@ class Signup extends _$Signup{
   FutureOr<String?> build(){}
   
   Future<void> signup(Map<String,dynamic> studentData)async{
-    state = AsyncLoading();
+    try{
+      state = AsyncLoading();
     final Map<String,dynamic> response = await StudentRepo.signup(studentData);
     
-      if (response["status"]){
-        state = AsyncData(response["message"]);
-        return response["message"];
-      }else{
-        throw response["error"];
-      
+    if (!response["status"]) {
+        throw response['error'];
+      }
+      state = AsyncData(response["message"]);
+      return response['message'];
+    } catch (e, st) {
+      state = AsyncError(e, st);
     }
   }
-
 }

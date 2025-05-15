@@ -57,9 +57,9 @@ class SignupPageState extends ConsumerState<SignupPage> {
           );
         },
         error:
-            (e, _) => showTopSnackBar(
+            (errorMessage, _) => showTopSnackBar(
               Overlay.of(context),
-              CustomSnackBar.error(message: e.toString()),
+              CustomSnackBar.error(message: errorMessage.toString()),
             ),
       );
     });
