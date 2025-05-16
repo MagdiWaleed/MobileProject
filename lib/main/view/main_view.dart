@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stores_app/external/widget/view_map.dart';
+import 'package:stores_app/main/provider/main_provider.dart';
 import 'package:stores_app/main/view/main_profile_view.dart';
 import 'package:stores_app/main/view/search_view.dart';
 import 'package:stores_app/main/view/stores_view.dart';
@@ -28,11 +29,13 @@ class _MainViewState extends ConsumerState<MainView> {
 
   @override
   Widget build(BuildContext context) {
+    final mainState = ref.watch(mainProvider);
     build_counter++;
     return Scaffold(
       floatingActionButton:
           currentPageIndex == 0
-              ? FloatingActionButton.extended(
+              ? mainState.whenOrNull(
+                data: (data) => FloatingActionButton.extended(
                 backgroundColor: AppColors.mainColor,
                 onPressed: () async {
                   await Navigator.of(
@@ -48,7 +51,10 @@ class _MainViewState extends ConsumerState<MainView> {
                     ),
                   ],
                 ),
+              ),
+              error: (error, stackTrace) => Container(),
               )
+              
               : Container(),
       backgroundColor: AppColors.backgroundColor,
       bottomNavigationBar: BottomNavigationBar(

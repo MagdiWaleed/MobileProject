@@ -41,11 +41,11 @@ class Search extends _$Search {
     return stores;
   }
 
-  Future<List> getStoresSearch(String productName) async {
+  Future<List> getStoresSearch(String searchString) async {
     state = AsyncLoading();
     late List? stores;
     try {
-      stores = await _database.getStoresProductsMatching(productName);
+      stores = await _database.getStoresAndProductsMatching(searchString);
     } catch (e, et) {
       state = AsyncError(e, et);
     }

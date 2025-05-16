@@ -1,24 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'search_provider.dart';
+part of 'main_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$searchHash() => r'0318dce9922ebd90eda33959acbbf22680d7d73d';
+String _$mainHash() => r'd51afdd075f454467e00fb288bafd88c5d31233a';
 
-/// See also [Search].
-@ProviderFor(Search)
-final searchProvider = AutoDisposeAsyncNotifierProvider<Search, List>.internal(
-  Search.new,
-  name: r'searchProvider',
+/// See also [Main].
+@ProviderFor(Main)
+final mainProvider = AutoDisposeAsyncNotifierProvider<Main, void>.internal(
+  Main.new,
+  name: r'mainProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$searchHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$mainHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$Search = AutoDisposeAsyncNotifier<List>;
+typedef _$Main = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

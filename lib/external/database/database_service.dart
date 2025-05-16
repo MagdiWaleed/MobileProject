@@ -243,6 +243,38 @@ class DatabaseService {
   //     return null;
   //   }
   // }
+  Future<List<StoreModel>> getStoresAndProductsMatching(String searchString) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> result = await db.rawQuery(
+      '''
+    SELECT s.*, p.*
+    FROM $_storesTableName s
+    JOIN $_storesProductsRelationTableName spr ON s.$_storesIdColumnName = spr.$_storesProductsRelationStoreIdColumnName
+    JOIN $_productsTableName p ON p.$_productsIdColumnName = spr.$_storesProductsRelationProductIdColumnName
+    WHERE LOWER(p.$_productsNameColumnName) LIKE ? or LOWER(s.$_storesNameColumnName) LIKE ?
+  ''',
+      ['%${searchString.toLowerCase()}%','%${searchString.toLowerCase()}%'],
+    );
+
+    final List<StoreModel> stores = [];
+    // print(result[0]);
+    for (var row in result) {
+      final StoreModel store = StoreModel.fromMap(row);
+      if (stores.contains(store)) {
+        int index = stores.indexWhere(
+          (singleStore) => singleStore.id == store.id,
+        );
+        stores[index].products.add(ProductModel.fromMap(row));
+        continue;
+      } else {
+        store.products.add(ProductModel.fromMap(row));
+        stores.add(store);
+      }
+    }
+
+    return stores;
+  }
 
   Future<List<StoreModel>> getStoresProductsMatching(String productName) async {
     final db = await database;

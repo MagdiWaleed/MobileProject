@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stores_app/external/app_data.dart';
 import 'package:stores_app/external/widget/custom_item_card.dart';
 import 'package:stores_app/external/widget/custom_loading.dart';
 import 'package:stores_app/external/widget/custom_shop_card.dart';
+import 'package:stores_app/main/provider/main_provider.dart';
 import 'package:stores_app/main/provider/search_provider.dart';
 import 'package:stores_app/store_details/single_shop_view.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
@@ -144,7 +146,10 @@ class _SearchViewState extends ConsumerState<SearchView> {
                                   child: Text('Item'),
                                 ),
                               ],
-                              onChanged: (value) {
+                              onChanged: (value) async{
+                              final db =await  SharedPreferences.getInstance();
+                              await db.setBool("viewMapButton", value=="Shop"?true:false);
+                              ref.watch(mainProvider.notifier).checkFloatingActionButton();
                                 if (value != null) {
                                   setState(() => _dropdownValue = value);
                                   if (value == "Shop") {
@@ -264,7 +269,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
                         children: [
                           SizedBox(height: 200),
                           Text(
-                            "There are no Product with: " +
+                            "There Are no Product or Store With: " +
                                 _searchController.text,
                           ),
                         ],

@@ -7,7 +7,7 @@ part of 'splash_provider.dart';
 // **************************************************************************
 
 String _$getStoresDataSplashHash() =>
-    r'e8a02a10ad0b20228a805719c5a8da4a759dd04d';
+    r'1edac436f751d49de787eae8451fdde97f06655e';
 
 /// See also [GetStoresDataSplash].
 @ProviderFor(GetStoresDataSplash)
