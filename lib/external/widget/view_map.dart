@@ -34,9 +34,8 @@ Future<Position> _getCurrentLocation() async {
 
 late Position userPosition;
 
-Future<Position> _initializeUserPosition() async {
+Future<void> _initializeUserPosition() async {
   userPosition = await _getCurrentLocation();
-  return userPosition;
 }
 
 class ViewMap extends ConsumerStatefulWidget {
@@ -47,17 +46,24 @@ class ViewMap extends ConsumerStatefulWidget {
 }
 
 class _ViewMapState extends ConsumerState<ViewMap> {
-  LatLng _userLocation = LatLng(userPosition.latitude, userPosition.longitude);
+ late LatLng _userLocation;
   bool _locationReady = false;
   final MapController _mapController = MapController();
   String _selectedDistance = '';
   final List<Marker> _markers = [];
 
+
+  void _extractUserLcation()async{
+    await _initializeUserPosition();
+    _userLocation= LatLng(userPosition.latitude, userPosition.longitude);
+     await _initLocation();
+  }
+
+
   @override
-  void initState() {
+  void initState(){
     super.initState();
-    _initLocation();
-    _initializeUserPosition();
+    _extractUserLcation();
   }
 
   Future<void> _initLocation() async {
