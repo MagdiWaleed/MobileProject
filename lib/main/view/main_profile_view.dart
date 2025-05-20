@@ -5,8 +5,6 @@ import 'package:stores_app/external/theme/app_colors.dart';
 import 'package:stores_app/external/widget/custom_loading.dart';
 import 'package:stores_app/main/provider/main_profile_provider.dart';
 import 'package:stores_app/user/views/profile_view.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:stores_app/user/controller/profile_controller.dart';
 
 class MainProfileView extends ConsumerWidget {
@@ -44,7 +42,7 @@ class MainProfileView extends ConsumerWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(50),
                     child: Image.network(
-                      "${AppData.SERVER_URL}/${studentData.profile_pic_path}?timestamp=${DateTime.now().millisecondsSinceEpoch}",
+                      "${AppData.SERVER_URL}/${studentData.profilePicPath}?timestamp=${DateTime.now().millisecondsSinceEpoch}",
                       height: 80,
                       width: 80,
                       key: UniqueKey(),
@@ -76,7 +74,7 @@ class MainProfileView extends ConsumerWidget {
                               ),
                             );
                             if (result == true) {
-                              ref.refresh(studentProfileProvider);
+                              ref.invalidate(studentProfileProvider);
                             }
                           },
                           style: ElevatedButton.styleFrom(

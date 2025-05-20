@@ -1,21 +1,19 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-
 class StudentModel {
   final String name;
   final String email;
   final String password;
-  final int student_id;
+  final int studentId;
   int? level;
   String? gender;
-  String? profile_pic_path;
+  String? profilePicPath;
 
   StudentModel({
     required this.name,
     required this.email,
     required this.password,
-    required this.student_id,
+    required this.studentId,
     this.gender,
     this.level,
   });
@@ -25,15 +23,17 @@ class StudentModel {
       name: data['name'],
       email: data['email'],
       password: data['password'],
-      student_id: data['student_id'],
+      studentId: data['student_id'],
     );
-    if (data['gender'] != null)
+    if (data['gender'] != null) {
       studentModel.gender = data['gender'] == 0 ? "Male" : "Female";
+    }
 
     if (data['level'] != null) studentModel.level = int.parse(data['level']);
 
-    if (data['profile_pic_path'] != null)
-      studentModel.profile_pic_path = data['profile_pic_path'];
+    if (data['profile_pic_path'] != null) {
+      studentModel.profilePicPath = data['profile_pic_path'];
+    }
     return studentModel;
   }
 
@@ -41,17 +41,17 @@ class StudentModel {
     String name,
     String email,
     String password,
-    int student_id,
+    int studentId,
     int? level,
     int? gender,
-    String profile_pic_path,
+    String profilePicPath,
   ) {
     final Map<String, dynamic> data = {
       "email": email,
       "name": name,
-      "student_id": student_id,
+      "student_id": studentId,
       "password": password,
-      "profile_pic_path": profile_pic_path,
+      "profile_pic_path": profilePicPath,
     };
     if (level != null) data['level'] = level;
 

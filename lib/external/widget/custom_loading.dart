@@ -32,8 +32,6 @@ class CustomLoading extends StatelessWidget {
                 AppColors.mainColor,
                 AppColors.mainColor,
               ],
-
-              // colors: const [Colors.white,Colors.white,Colors.white,],
               strokeWidth: 2,
             ),
           ),

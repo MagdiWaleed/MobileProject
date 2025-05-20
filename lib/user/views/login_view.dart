@@ -16,7 +16,6 @@ class LoginPage extends ConsumerWidget {
     TextEditingController(),
     TextEditingController(),
   ];
-  bool loading = false;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<AsyncValue<String>>(loginProvider, (prev, next) {

@@ -6,6 +6,8 @@ import 'package:stores_app/main/provider/stores_provider.dart';
 import 'package:stores_app/store_details/single_shop_view.dart';
 
 class StoresView extends ConsumerStatefulWidget {
+  const StoresView({super.key});
+
   @override
   ConsumerState<StoresView> createState() => _StoresViewState();
 }

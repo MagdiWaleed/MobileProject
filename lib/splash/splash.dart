@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:stores_app/external/app_data.dart';
@@ -21,13 +20,14 @@ class Splash extends ConsumerStatefulWidget {
 }
 
 class _SplashState extends ConsumerState<Splash> {
-  void am_i_logged_in() async {
+  void amILoggedIn() async {
     setState(() {
-      start_loading = true;
+      startLoading = true;
     });
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
-    await ref.read(getStoresDataSplashProvider.notifier).FetchStoresData();
+    await ref.read(getStoresDataSplashProvider.notifier).fetchStoresData();
+    if (!mounted) return;
     if (token == null) {
       Navigator.of(
         context,
@@ -42,24 +42,22 @@ class _SplashState extends ConsumerState<Splash> {
   @override
   void initState() {
     AppData.SERVER_URL = "https://api1.almahil.com";
-    am_i_logged_in();
+    amILoggedIn();
     super.initState();
   }
 
   final TextEditingController _textEditingController = TextEditingController();
 
   Future<bool> checkServer() async {
-    print("Starting server check...");
     bool check = true;
     try {
       await http
           .get(Uri.parse(AppData.SERVER_URL!))
           .timeout(
-            Duration(seconds: 5), //+
+            Duration(seconds: 5),
             onTimeout: () {
-              //+
               check = false;
-              throw TimeoutException('Server check timed out'); //+
+              throw TimeoutException('Server check timed out');
             },
           );
     } catch (e) {
@@ -68,7 +66,7 @@ class _SplashState extends ConsumerState<Splash> {
     return check;
   }
 
-  bool start_loading = false;
+  bool startLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -82,14 +80,13 @@ class _SplashState extends ConsumerState<Splash> {
                 message: "Couldn't Load The Data From The Server",
               ),
             ),
-        data: (_) => print("lessgo"),
       ),
     );
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          start_loading
+          startLoading
               ? Container(
                 margin: EdgeInsets.symmetric(horizontal: 35),
                 decoration: BoxDecoration(
@@ -117,7 +114,6 @@ class _SplashState extends ConsumerState<Splash> {
                           AppColors.mainColor,
                         ],
 
-                        // colors: const [Colors.white,Colors.white,Colors.white,],
                         strokeWidth: 2,
                       ),
                     ),
@@ -144,40 +140,44 @@ class _SplashState extends ConsumerState<Splash> {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () async {
+                                final overlay = Overlay.of(context);
                                 setState(() {
-                                  start_loading = true;
+                                  startLoading = true;
                                 });
                                 AppData.SERVER_URL =
                                     _textEditingController.value.text;
                                 if (await checkServer()) {
+                                  if (!mounted) return;
                                   showTopSnackBar(
-                                    Overlay.of(context),
+                                    overlay,
                                     CustomSnackBar.success(
                                       message: "Connected Successfully",
                                     ),
                                   );
-                                  am_i_logged_in();
+                                  amILoggedIn();
                                 } else {
+                                  if (!mounted) return;
                                   showTopSnackBar(
-                                    Overlay.of(context),
+                                    overlay,
                                     CustomSnackBar.error(
                                       message: "Error in connecting",
                                     ),
                                   );
                                 }
+                                if (!mounted) return;
                                 setState(() {
-                                  start_loading = false;
+                                  startLoading = false;
                                 });
                               },
-                              child: Text(
-                                "Connect",
-                                style: TextStyle(color: Colors.white),
-                              ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.mainColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
+                              ),
+                              child: Text(
+                                "Connect",
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
                           ),
@@ -191,26 +191,28 @@ class _SplashState extends ConsumerState<Splash> {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () async {
+                                final overlay = Overlay.of(context);
                                 final SharedPreferences prefs =
                                     await SharedPreferences.getInstance();
 
                                 await prefs.remove('token');
+                                if (!mounted) return;
                                 showTopSnackBar(
-                                  Overlay.of(context),
+                                  overlay,
                                   CustomSnackBar.info(
                                     message: "Token Deleted Successfully",
                                   ),
                                 );
                               },
-                              child: Text(
-                                "Delete Token",
-                                style: TextStyle(color: Colors.white),
-                              ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
+                              ),
+                              child: Text(
+                                "Delete Token",
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
                           ),
