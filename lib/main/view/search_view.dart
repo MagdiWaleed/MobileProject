@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stores_app/external/app_data.dart';
 import 'package:stores_app/external/widget/custom_item_card.dart';
@@ -12,7 +11,7 @@ import 'package:stores_app/store_details/single_shop_view.dart';
 import 'package:stores_app/external/theme/app_colors.dart';
 
 class SearchView extends ConsumerStatefulWidget {
-  const SearchView({Key? key}) : super(key: key);
+  const SearchView({super.key});
 
   @override
   ConsumerState<SearchView> createState() => _SearchViewState();
@@ -21,84 +20,6 @@ class SearchView extends ConsumerStatefulWidget {
 class _SearchViewState extends ConsumerState<SearchView> {
   String _dropdownValue = 'Shop';
   final TextEditingController _searchController = TextEditingController();
-
-  // final List<Map<String, dynamic>> shops = [
-  //   {
-  //     'name': 'R/C name',
-  //     'image': 'assets/images/logo.png',
-  //     'rating': '4.6',
-  //     'items': ['Latte', 'Cappuccino', 'Mocha'],
-  //   },
-  //   {
-  //     'name': 'Coffee House',
-  //     'image': 'assets/images/logo.png',
-  //     'rating': '4.7',
-  //     'items': ['Americano', 'Espresso'],
-  //   },
-  //   {
-  //     'name': 'Burger King',
-  //     'image': 'assets/images/logo.png',
-  //     'rating': '4.2',
-  //     'items': ['Whopper'],
-  //   },
-  //   {
-  //     'name': 'Pizza Corner',
-  //     'image': 'assets/images/logo.png',
-  //     'rating': '4.8',
-  //     'items': ['Margherita', 'Pepperoni', 'Veggie', 'BBQ Chicken'],
-  //   },
-  //   {
-  //     'name': 'Sushi Spot',
-  //     'image': 'assets/images/logo.png',
-  //     'rating': '4.5',
-  //     'items': ['California Roll', 'Nigiri', 'Sashimi', 'Maki', 'Uramaki'],
-  //   },
-  //   {
-  //     'name': 'Taco Bell',
-  //     'image': 'assets/images/logo.png',
-  //     'rating': '4.3',
-  //     'items': ['Crunchy Taco', 'Soft Taco', 'Burrito'],
-  //   },
-  // ];
-
-  // final List<Map<String, String>> items = [
-  //   {
-  //     'shop': 'R/C name',
-  //     'item': 'Espresso',
-  //     'description': 'Strong and bold single shot espresso.',
-  //     'image': 'assets/images/logo.png',
-  //   },
-  //   {
-  //     'shop': 'Coffee House',
-  //     'item': 'Iced Latte',
-  //     'description': 'Smooth espresso with chilled milk and ice.',
-  //     'image': 'assets/images/logo.png',
-  //   },
-  //   {
-  //     'shop': 'Burger King',
-  //     'item': 'Whopper',
-  //     'description': 'Flame-grilled beef patty with fresh veggies.',
-  //     'image': 'assets/images/logo.png',
-  //   },
-  //   {
-  //     'shop': 'Pizza Corner',
-  //     'item': 'Margherita',
-  //     'description': 'Classic pizza with tomato, mozzarella, basil.',
-  //     'image': 'assets/images/logo.png',
-  //   },
-  //   {
-  //     'shop': 'Sushi Spot',
-  //     'item': 'California Roll',
-  //     'description': 'Crab, avocado, cucumber rolled in rice.',
-  //     'image': 'assets/images/logo.png',
-  //   },
-  //   {
-  //     'shop': 'Taco Bell',
-  //     'item': 'Crunchwrap Supreme',
-  //     'description': 'Taco filling wrapped in a crispy tostada shell.',
-  //     'image': 'assets/images/logo.png',
-  //   },
-  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -146,10 +67,16 @@ class _SearchViewState extends ConsumerState<SearchView> {
                                   child: Text('Item'),
                                 ),
                               ],
-                              onChanged: (value) async{
-                              final db =await  SharedPreferences.getInstance();
-                              await db.setBool("viewMapButton", value=="Shop"?true:false);
-                              ref.watch(mainProvider.notifier).checkFloatingActionButton();
+                              onChanged: (value) async {
+                                final db =
+                                    await SharedPreferences.getInstance();
+                                await db.setBool(
+                                  "viewMapButton",
+                                  value == "Shop" ? true : false,
+                                );
+                                ref
+                                    .watch(mainProvider.notifier)
+                                    .checkFloatingActionButton();
                                 if (value != null) {
                                   setState(() => _dropdownValue = value);
                                   if (value == "Shop") {
@@ -238,7 +165,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
         _dropdownValue == 'Shop'
             ? searchState.when(
               data: (data) {
-                return data.length != 0
+                return data.isNotEmpty
                     ? SliverGrid.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -269,8 +196,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
                         children: [
                           SizedBox(height: 200),
                           Text(
-                            "There Are no Product or Store With: " +
-                                _searchController.text,
+                            "There Are no Product or Store With: ${_searchController.text}",
                           ),
                         ],
                       ),
@@ -296,7 +222,6 @@ class _SearchViewState extends ConsumerState<SearchView> {
             : searchState.when(
               data: (combinedData) {
                 final data = combinedData[0]['unique product'];
-                // print(data);
 
                 return SliverToBoxAdapter(
                   child: SizedBox(
@@ -389,7 +314,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
                   : SliverToBoxAdapter(
                     child: Center(
                       child: Text(
-                        "There are no Product with: " + _searchController.text,
+                        "There are no Product with: ${_searchController.text}",
                       ),
                     ),
                   );
@@ -398,17 +323,6 @@ class _SearchViewState extends ConsumerState<SearchView> {
                 (error, _) => SliverToBoxAdapter(child: Text("an Error Occur")),
             loading: () => SliverToBoxAdapter(child: CustomLoading()),
           ),
-        //     Column(
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   children: [
-
-        //     const SizedBox(height: 10),
-        //     Expanded(
-        //       child: ListView.builder(
-        //         padding: const EdgeInsets.symmetric(horizontal: 20),
-        //
-        //   ],
-        // );,
       ],
     );
   }

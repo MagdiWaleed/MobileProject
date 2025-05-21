@@ -12,8 +12,8 @@ class DatabaseService {
   final String _storesNameColumnName = "store_name";
   final String _storesReviewColumnName = "store_review";
   final String _storesImageColumnName = "store_image";
-  final String _store_location_longitudeColumnName = "store_location_longitude";
-  final String _store_location_latitudeColumnName = "store_location_latitude";
+  final String _storeLongitudeColumnName = "store_location_longitude";
+  final String _storeLatitudeColumnName = "store_location_latitude";
   final String _storeDescriptionColumnName = "store_description";
 
   final String _productsTableName = "products";
@@ -50,8 +50,8 @@ class DatabaseService {
           $_storesNameColumnName TEXT NOT NULL,
           $_storesImageColumnName TEXT NOT NULL,
           $_storesReviewColumnName REAL NOT NULL,
-          $_store_location_longitudeColumnName REAL NOT NULL,
-          $_store_location_latitudeColumnName REAL NOT NULL,
+          $_storeLongitudeColumnName REAL NOT NULL,
+          $_storeLatitudeColumnName REAL NOT NULL,
           $_storeDescriptionColumnName TEXT NOT NULL
         );
       ''');
@@ -87,10 +87,9 @@ class DatabaseService {
       await db.insert(_storesTableName, {
         _storesIdColumnName: storeMap['store_id'],
         _storesNameColumnName: storeMap['store_name'],
-        _store_location_latitudeColumnName: storeMap['store_location_latitude'],
+        _storeLatitudeColumnName: storeMap['store_location_latitude'],
         _storeDescriptionColumnName: storeMap['store_description'],
-        _store_location_longitudeColumnName:
-            storeMap['store_location_longitude'],
+        _storeLongitudeColumnName: storeMap['store_location_longitude'],
         _storesImageColumnName: storeMap['store_image'],
         _storesReviewColumnName: storeMap['store_review'],
       });
@@ -190,7 +189,6 @@ class DatabaseService {
   ''',
       [storeId],
     );
-    print(data);
     return data.map((e) => ProductModel.fromMap(e)).toList();
   }
 
@@ -201,7 +199,6 @@ class DatabaseService {
       List<StoreModel> stores = data.map((e) => StoreModel.fromMap(e)).toList();
       return stores;
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -212,7 +209,6 @@ class DatabaseService {
       final data = await db.query(_storesProductsRelationTableName);
       return data;
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -221,29 +217,17 @@ class DatabaseService {
     try {
       final db = await database;
       final data = await db.query(_productsTableName);
-      print(data);
       List<ProductModel> products =
           data.map((e) => ProductModel.fromMap(e)).toList();
       return products;
     } catch (e) {
-      print(e);
       return null;
     }
   }
 
-  // Future<List<StoresProductsRelationsModel>?> getStoresProductsRelations() async {
-  //   try {
-  //     final db = await database;
-  //     final data = await db.query(_storesProductsRelationTableName);
-  //     print(data);
-  //     List<StoresProductsRelationsModel> storesProductsRelations = data.map((e) => StoresProductsRelationsModel.fromMap(e)).toList();
-  //     return storesProductsRelations;
-  //   } catch (e) {
-  //     print(e);
-  //     return null;
-  //   }
-  // }
-  Future<List<StoreModel>> getStoresAndProductsMatching(String searchString) async {
+  Future<List<StoreModel>> getStoresAndProductsMatching(
+    String searchString,
+  ) async {
     final db = await database;
 
     final List<Map<String, dynamic>> result = await db.rawQuery(
@@ -254,11 +238,10 @@ class DatabaseService {
     JOIN $_productsTableName p ON p.$_productsIdColumnName = spr.$_storesProductsRelationProductIdColumnName
     WHERE LOWER(p.$_productsNameColumnName) LIKE ? or LOWER(s.$_storesNameColumnName) LIKE ?
   ''',
-      ['%${searchString.toLowerCase()}%','%${searchString.toLowerCase()}%'],
+      ['%${searchString.toLowerCase()}%', '%${searchString.toLowerCase()}%'],
     );
 
     final List<StoreModel> stores = [];
-    // print(result[0]);
     for (var row in result) {
       final StoreModel store = StoreModel.fromMap(row);
       if (stores.contains(store)) {
@@ -291,7 +274,6 @@ class DatabaseService {
     );
 
     final List<StoreModel> stores = [];
-    // print(result[0]);
     for (var row in result) {
       final StoreModel store = StoreModel.fromMap(row);
       if (stores.contains(store)) {
@@ -310,7 +292,6 @@ class DatabaseService {
   }
 
   Future<bool> deleteStore(int id) async {
-    final store = getStoreById(id);
     final db = await database;
     await db.delete(
       _storesTableName,

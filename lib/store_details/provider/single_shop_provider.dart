@@ -14,9 +14,9 @@ class StoreDetails extends _$StoreDetails {
   Future<StoreModel> getAllProducts(StoreModel store) async {
     state = AsyncLoading();
     try {
-      DatabaseService _database = DatabaseService.instance;
+      DatabaseService database = DatabaseService.instance;
 
-      final List<ProductModel> products = await _database.getStoreProducts(
+      final List<ProductModel> products = await database.getStoreProducts(
         store.id,
       );
       store.products = products;

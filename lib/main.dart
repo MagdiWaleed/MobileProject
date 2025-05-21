@@ -30,17 +30,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // initialRoute: '/Login',
-      // routes: {
-      //   '/Login': (context) =>  LoginPage(),
-      //   '/Home': (context) => const HomePage(),
-      //   '/profile': (context) => const ProfilePage(),
-      //   '/signup/Step 1': (context) => const SignupPage(step: 1),
-      //   '/signup/Step 2': (context) => const SignupPage(step: 2),
-      //   '/signup/Step 3': (context) => const SignupPage(step: 3),
-      // },
-      home: Splash(),
-    );
+    return MaterialApp(home: Splash());
   }
 }

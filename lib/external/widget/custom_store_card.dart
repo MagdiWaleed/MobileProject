@@ -3,7 +3,7 @@ import 'package:stores_app/external/theme/app_colors.dart';
 import 'package:stores_app/external/model/store_model.dart';
 
 class CustomStoreCard extends StatelessWidget {
-  CustomStoreCard({super.key, required this.storeModel});
+  const CustomStoreCard({super.key, required this.storeModel});
 
   final StoreModel storeModel;
 

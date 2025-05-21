@@ -39,29 +39,27 @@ Future<void> _initializeUserPosition() async {
 }
 
 class ViewMap extends ConsumerStatefulWidget {
-  const ViewMap({Key? key}) : super(key: key);
+  const ViewMap({super.key});
 
   @override
   ConsumerState<ViewMap> createState() => _ViewMapState();
 }
 
 class _ViewMapState extends ConsumerState<ViewMap> {
- late LatLng _userLocation;
+  late LatLng _userLocation;
   bool _locationReady = false;
   final MapController _mapController = MapController();
   String _selectedDistance = '';
   final List<Marker> _markers = [];
 
-
-  void _extractUserLcation()async{
+  void _extractUserLcation() async {
     await _initializeUserPosition();
-    _userLocation= LatLng(userPosition.latitude, userPosition.longitude);
-     await _initLocation();
+    _userLocation = LatLng(userPosition.latitude, userPosition.longitude);
+    await _initLocation();
   }
 
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _extractUserLcation();
   }
@@ -87,8 +85,8 @@ class _ViewMapState extends ConsumerState<ViewMap> {
 
     for (var store in stores) {
       final storeLatLng = LatLng(
-        store.store_location_latitude,
-        store.store_location_longitude,
+        store.storeLocationLatitude,
+        store.storeLocationLongitude,
       );
       _markers.add(
         Marker(
@@ -102,8 +100,8 @@ class _ViewMapState extends ConsumerState<ViewMap> {
                   Geolocator.distanceBetween(
                     _userLocation.latitude,
                     _userLocation.longitude,
-                    store.store_location_latitude,
-                    store.store_location_longitude,
+                    store.storeLocationLatitude,
+                    store.storeLocationLongitude,
                   ) /
                   1000;
               setState(() {

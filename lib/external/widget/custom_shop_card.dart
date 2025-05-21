@@ -6,7 +6,7 @@ import 'package:stores_app/external/theme/app_colors.dart';
 class CustomShopCard extends StatelessWidget {
   final StoreModel shop;
 
-  const CustomShopCard({Key? key, required this.shop}) : super(key: key);
+  const CustomShopCard({super.key, required this.shop});
 
   @override
   Widget build(BuildContext context) {
@@ -128,8 +128,6 @@ class CustomShopCard extends StatelessWidget {
 
         Container(
           height: 180,
-
-          // width: 200,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
           child: Stack(
             children: [

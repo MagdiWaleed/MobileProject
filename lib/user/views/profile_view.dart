@@ -12,7 +12,7 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
-  ProfilePage({super.key, required this.studentData});
+  const ProfilePage({super.key, required this.studentData});
   final StudentModel studentData;
 
   @override
@@ -26,14 +26,14 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
   void removeImage() {
     setState(() {
       _controller.image = null;
-      widget.studentData.profile_pic_path = null;
+      widget.studentData.profilePicPath = null;
       _controller.deleteImage = true;
     });
   }
 
-  Future<void> _PICKIMAGE(bool is_camera) async {
+  Future<void> pickImageFuture(bool isCamera) async {
     final pickedFile = await ImagePicker().pickImage(
-      source: is_camera ? ImageSource.camera : ImageSource.gallery,
+      source: isCamera ? ImageSource.camera : ImageSource.gallery,
       maxWidth: 800,
       maxHeight: 800,
       imageQuality: 80,
@@ -42,7 +42,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
     if (pickedFile != null) {
       setState(() {
         _controller.image = File(pickedFile.path);
-        widget.studentData.profile_pic_path = _controller.image!.path;
+        widget.studentData.profilePicPath = _controller.image!.path;
         _controller.deleteImage = false;
       });
     }
@@ -54,42 +54,40 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
       useSafeArea: true,
       context: context,
       builder: (context) {
-        return Container(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0.1),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
-                  ),
-                ),
-                child: ListTile(
-                  title: Text("Camera"),
-                  onTap: () {
-                    _PICKIMAGE(true);
-                    Navigator.pop(context);
-                  },
-                  trailing: Icon(Icons.camera),
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.1),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                decoration: BoxDecoration(border: Border.all(width: 0.1)),
-                child: ListTile(
-                  title: Text("Gallery"),
-                  onTap: () {
-                    _PICKIMAGE(false);
-                    Navigator.pop(context);
-                  },
-                  trailing: Icon(Icons.image),
-                ),
+              child: ListTile(
+                title: Text("Camera"),
+                onTap: () {
+                  pickImageFuture(true);
+                  Navigator.pop(context);
+                },
+                trailing: Icon(Icons.camera),
               ),
-            ],
-          ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              decoration: BoxDecoration(border: Border.all(width: 0.1)),
+              child: ListTile(
+                title: Text("Gallery"),
+                onTap: () {
+                  pickImageFuture(false);
+                  Navigator.pop(context);
+                },
+                trailing: Icon(Icons.image),
+              ),
+            ),
+          ],
         );
       },
     );
@@ -181,14 +179,14 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                                           fit: BoxFit.cover,
                                         )
                                         : Image.network(
-                                          "${AppData.SERVER_URL}/${widget.studentData.profile_pic_path ?? "DEFAULT_PROFILE_IMAGE"}?timestamp=${DateTime.now().millisecondsSinceEpoch}",
+                                          "${AppData.SERVER_URL}/${widget.studentData.profilePicPath ?? "DEFAULT_PROFILE_IMAGE"}?timestamp=${DateTime.now().millisecondsSinceEpoch}",
                                           height: 100,
                                           width: 100,
                                           fit: BoxFit.cover,
                                           key: UniqueKey(),
                                         ),
                               ),
-                              widget.studentData.profile_pic_path != null
+                              widget.studentData.profilePicPath != null
                                   ? Positioned(
                                     right: -5,
                                     top: -5,

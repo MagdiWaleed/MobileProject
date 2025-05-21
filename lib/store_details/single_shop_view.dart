@@ -9,8 +9,8 @@ import 'package:stores_app/store_details/provider/single_shop_provider.dart';
 
 class SingleShopView extends ConsumerStatefulWidget {
   final StoreModel shop;
-  SingleShopView({super.key, required this.shop, this.getProducts});
-  bool? getProducts;
+  final bool? getProducts;
+  const SingleShopView({super.key, required this.shop, this.getProducts});
 
   @override
   ConsumerState<SingleShopView> createState() => _SingleShopViewState();
@@ -189,9 +189,7 @@ class _SingleShopViewState extends ConsumerState<SingleShopView> {
                                         ),
                                         const SizedBox(height: 8),
                                         Text(
-                                          "Price: L.E. " +
-                                              (shop.products[index].price * 10)
-                                                  .toString(),
+                                          "Price: L.E. ${shop.products[index].price * 10}",
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w600,
@@ -206,8 +204,6 @@ class _SingleShopViewState extends ConsumerState<SingleShopView> {
                                     borderRadius: BorderRadius.circular(8),
                                     child: Image.network(
                                       "${AppData.SERVER_URL}/items/${shop.products[index].id}/image",
-
-                                      //shop.products[index].image,
                                       width: 80,
                                       height: 80,
                                       fit: BoxFit.cover,

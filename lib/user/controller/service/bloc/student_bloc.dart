@@ -20,10 +20,8 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     );
 
     if (response['status']) {
-      print(response['message']);
       emit(StudentUpdateDataSuccessfullState(message: response['message']));
     } else {
-      print(response['error']);
       emit(StudentUpdateDataFailedState(errorMessage: response['error']));
     }
   }

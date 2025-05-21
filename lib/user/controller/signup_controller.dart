@@ -54,7 +54,7 @@ class SignupController {
 
   void showSignupState(StudentState state, BuildContext context) {
     switch (state.runtimeType) {
-      case StudentSignupSuccessfullState:
+      case StudentSignupSuccessfullState _:
         {
           state = state as StudentSignupSuccessfullState;
           showTopSnackBar(
@@ -66,7 +66,7 @@ class SignupController {
             MaterialPageRoute(builder: (context) => MainView()),
           );
         }
-      case StudentSignupFailedState:
+      case StudentSignupFailedState _:
         {
           state = state as StudentSignupFailedState;
           showTopSnackBar(

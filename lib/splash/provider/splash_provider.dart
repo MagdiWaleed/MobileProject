@@ -11,7 +11,7 @@ class GetStoresDataSplash extends _$GetStoresDataSplash {
   @override
   FutureOr<dynamic> build() => [];
 
-  Future<void> FetchStoresData() async {
+  Future<void> fetchStoresData() async {
     state = AsyncLoading();
 
     try {

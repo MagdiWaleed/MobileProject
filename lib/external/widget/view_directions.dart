@@ -20,11 +20,9 @@ class _ViewDirectionsState extends State<ViewDirections> {
   LatLng? _userLocation;
   double? _distance;
   List<LatLng> _routePoints = [];
-  late final MapController _mapController;
   @override
   void initState() {
     super.initState();
-    _mapController = MapController();
     _getUserLocation();
   }
 
@@ -33,8 +31,8 @@ class _ViewDirectionsState extends State<ViewDirections> {
       final position = await Geolocator.getCurrentPosition();
       final userLatLng = LatLng(position.latitude, position.longitude);
       final storeLatLng = LatLng(
-        widget.store.store_location_latitude,
-        widget.store.store_location_longitude,
+        widget.store.storeLocationLatitude,
+        widget.store.storeLocationLongitude,
       );
 
       final distanceInMeters = Geolocator.distanceBetween(
@@ -94,8 +92,8 @@ class _ViewDirectionsState extends State<ViewDirections> {
   @override
   Widget build(BuildContext context) {
     final storeLatLng = LatLng(
-      widget.store.store_location_latitude,
-      widget.store.store_location_longitude,
+      widget.store.storeLocationLatitude,
+      widget.store.storeLocationLongitude,
     );
 
     return Scaffold(

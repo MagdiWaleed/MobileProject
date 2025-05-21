@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stores_app/external/widget/view_map.dart';
 import 'package:stores_app/main/provider/main_provider.dart';
@@ -18,7 +17,7 @@ class MainView extends ConsumerStatefulWidget {
 
 class _MainViewState extends ConsumerState<MainView> {
   int currentPageIndex = 1;
-  int build_counter = 0;
+  int buildCounter = 0;
 
   bool visitedProfile = false;
 
@@ -30,31 +29,31 @@ class _MainViewState extends ConsumerState<MainView> {
   @override
   Widget build(BuildContext context) {
     final mainState = ref.watch(mainProvider);
-    build_counter++;
+    buildCounter++;
     return Scaffold(
       floatingActionButton:
           currentPageIndex == 0
               ? mainState.whenOrNull(
-                data: (data) => FloatingActionButton.extended(
-                backgroundColor: AppColors.mainColor,
-                onPressed: () async {
-                  await Navigator.of(
-                    context,
-                  ).push(MaterialPageRoute(builder: (context) => ViewMap()));
-                },
-                label: Row(
-                  children: [
-                    Icon(Icons.map, color: Colors.white),
-                    Text(
-                      ' View Map  ',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                data:
+                    (data) => FloatingActionButton.extended(
+                      backgroundColor: AppColors.mainColor,
+                      onPressed: () async {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => ViewMap()),
+                        );
+                      },
+                      label: Row(
+                        children: [
+                          Icon(Icons.map, color: Colors.white),
+                          Text(
+                            ' View Map  ',
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-              error: (error, stackTrace) => Container(),
+                error: (error, stackTrace) => Container(),
               )
-              
               : Container(),
       backgroundColor: AppColors.backgroundColor,
       bottomNavigationBar: BottomNavigationBar(
@@ -66,7 +65,7 @@ class _MainViewState extends ConsumerState<MainView> {
             }
 
             if (!visitedProfile && value == 2) {
-              ref.refresh(studentProfileProvider);
+              ref.refresh(studentProfileProvider).toString();
               visitedProfile = true;
             }
 

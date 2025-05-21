@@ -33,10 +33,8 @@ class StudentRepo {
   static Future<Map<String, dynamic>> updateStudentData(
     Map<String, dynamic> studentData,
   ) async {
-    final client = http.Client();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
-    print(token);
 
     try {
       var request = http.MultipartRequest(
@@ -45,13 +43,14 @@ class StudentRepo {
       );
       if (studentData['profile_pic_path'] != "DEFAULT_PROFILE_IMAGE.png" &&
           studentData['profile_pic_path'] != "#" &&
-          studentData['profile_pic_path'] != "DELETE")
+          studentData['profile_pic_path'] != "DELETE") {
         request.files.add(
           await http.MultipartFile.fromPath(
             'profile_pic_path',
             studentData['profile_pic_path'],
           ),
         );
+      }
 
       request.headers['Authorization'] = token!;
 

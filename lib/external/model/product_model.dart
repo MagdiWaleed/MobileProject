@@ -19,7 +19,6 @@ class ProductModel {
       id: data['product_id'],
       name: data["product_name"],
 
-      //image: data['product_image'],
       image: AppData.SERVER_URL! + data['product_image'],
       descrption: data['product_description'],
       price: data['product_price'],
